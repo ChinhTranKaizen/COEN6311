@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2><p>hello  {{ loginuser }}</p><br></h2>>
+<p>Your information is:</p><br>
+{{ row }}<br>
+<p>Please modify your profile:</p>>
+<form method="post" action="/modifyprofile">
+    <label>Password：<input type="password" name="password" value="" min="null"></label><br>
+    <label>Firstname：<input type="text" name="firstname" value="" min="null"></label><br>
+    <label>Lastname：<input type="text" name="lastname" value="" min="null"></label><br>
+    <label>E-mail：<input type="text" name="email" value="" min="null"></label><br>
+    <label>Phone：<input type="text" name="phone" value="" min="null"></label><br>
+    <label>Address：<input type="text" name="address" value="" min="null"></label><br>
+    <label>postal：<input type="text" name="postal" value="" min="null"></label><br>
+    <input type="submit" value="Modify">
+</form>
+
+
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/register.css')}}">
+    <title>Register</title>
+</head>
+<body>
+<div class="form-wrapper">
+        <div class="header">
+            Register
+        </div>
+
+        <form method="post" action="/addcustomer">
+            <label>Username：<input type="text" name="username" value="" min="null"></label><br>
+            <label>Password：<input type="password" name="password" value="" min="null"></label><br>
+            <label>Firstname：<input type="text" name="firstname" value="" min="null"></label><br>
+            <label>Lastname：<input type="text" name="lastname" value="" min="null"></label><br>
+            <label>E-mail：<input type="text" name="email" value="" min="null"></label><br>
+            <label>Phone：<input type="text" name="phone" value="" min="null"></label><br>
+            <label>Address：<input type="text" name="address" value="" min="null"></label><br>
+            <label>postal：<input type="text" name="postal" value="" min="null"></label><br>
+            <input type="submit" value="Register">
+        </form>
+
+</body>
+</html>
