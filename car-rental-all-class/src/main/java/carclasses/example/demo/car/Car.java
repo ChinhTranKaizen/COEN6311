@@ -18,13 +18,16 @@ public class Car
 	private Integer releaseyear;
 	private String condition;
 	private Integer pricekm;
-// boolean state (free or not)
+    private boolean state;
+    private String brand;
+    private String model; 
+    private String type;
+    private Integer priceday;
 	protected Car() {
 		
 	}
-
-	
-	public Car(Integer id, String entrydate, Integer kmdriven, Integer releaseyear, String condition, Integer pricekm) {
+	public Car(Integer id, String entrydate, Integer kmdriven, Integer releaseyear, String condition, Integer pricekm,
+			boolean state, String brand, String model, String type, Integer priceday) {
 		super();
 		this.id = id;
 		this.entrydate = entrydate;
@@ -32,57 +35,92 @@ public class Car
 		this.releaseyear = releaseyear;
 		this.condition = condition;
 		this.pricekm = pricekm;
-	}
-
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getEntrydate() {
-		return entrydate;
-	}
-
-	public void setEntrydate(String entrydate) {
-		this.entrydate = entrydate;
-	}
-
-	public Integer getKmdriven() {
-		return kmdriven;
-	}
-
-	public void setKmdriven(Integer kmdriven) {
-		this.kmdriven = kmdriven;
+		this.state = state;
+		this.brand = brand;
+		this.model = model;
+		this.type = type;
+		this.priceday = priceday;
 	}
 
 	
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getEntrydate() {
+		return entrydate;
+	}
+	public void setEntrydate(String entrydate) {
+		this.entrydate = entrydate;
+	}
+	public Integer getKmdriven() {
+		return kmdriven;
+	}
+	public void setKmdriven(Integer kmdriven) {
+		this.kmdriven = kmdriven;
+	}
 	public Integer getReleaseyear() {
 		return releaseyear;
 	}
-
 	public void setReleaseyear(Integer releaseyear) {
 		this.releaseyear = releaseyear;
 	}
-
 	public String getCondition() {
 		return condition;
 	}
-
 	public void setCondition(String condition) {
 		this.condition = condition;
 	}
-
 	public Integer getPricekm() {
 		return pricekm;
 	}
-
 	public void setPricekm(Integer pricekm) {
 		this.pricekm = pricekm;
 	}
+	public boolean isState() {
+		return state;
+	}
+	public void setState(boolean state) {
+		this.state = state;
+	}
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	
+	public Integer getPriceday() {
+		return priceday;
+	}
+	public void setPriceday(Integer priceday) {
+		this.priceday = priceday;
+	}
+
+
+	public String getModel() {
+		return model;
+	}
+
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+
+	public String getType() {
+		return type;
+	}
+
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+
 	
 	
 }

@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+
 //indicating that it is a JPA entity
 @Entity
 public class Bill 
@@ -15,7 +16,7 @@ public class Bill
 	private Integer id;
 	private Integer IniStaffId;
 	private Integer EndStaffId;
-	private Integer carId;// car object
+	private String carBill;
 	private String StartDate;
 	private String EndDate;
 	
@@ -23,16 +24,19 @@ public class Bill
 		
 	}
 
-	public Bill(Integer id, Integer iniStaffId, Integer endStaffId, Integer carId, String startDate,
-			String endDate) {
+	
+	
+	public Bill(Integer id, Integer iniStaffId, Integer endStaffId, String carBill, String startDate, String endDate) {
 		super();
 		this.id = id;
 		IniStaffId = iniStaffId;
 		EndStaffId = endStaffId;
-		this.carId = carId;
+		this.carBill = carBill;
 		StartDate = startDate;
 		EndDate = endDate;
 	}
+
+
 
 	public Integer getId() {
 		return id;
@@ -58,13 +62,23 @@ public class Bill
 		EndStaffId = endStaffId;
 	}
 
-	public Integer getCarId() {
-		return carId;
+	
+	
+
+
+	
+
+	public String getCarBill() {
+		return carBill;
 	}
 
-	public void setCarId(Integer carId) {
-		this.carId = carId;
+
+
+	public void setCarBill(String carBill) {
+		this.carBill = carBill;
 	}
+
+
 
 	public String getStartDate() {
 		return StartDate;

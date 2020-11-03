@@ -15,15 +15,15 @@ public class Employee
 	private Integer id;
 	private String name;
 	private String password;
-	private String position;
+	private String position;// May change it enum in next sprint
 	private String email;
 	
 	protected Employee() {
 		
 	}
-
 	
 
+	
 	public Employee(Integer id, String name, String password, String position, String email) {
 		super();
 		this.id = id;
@@ -40,11 +40,9 @@ public class Employee
 	}
 
 
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 
 
 	public String getName() {
