@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Nov 03 13:33:52 EST 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0175-8f63-02a8-000004b216c0 
+on database directory memory:C:\Users\OS\test\COEN6311\car-rental-all-class\36df61f2-6b9c-49d3-8664-77ff90074159 with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09 
+Loaded from file:/C:/Users/OS/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=AdoptOpenJDK
+java.runtime.version=11.0.9+11
+user.dir=C:\Users\OS\test\COEN6311\car-rental-all-class
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
