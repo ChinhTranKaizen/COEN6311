@@ -2,6 +2,7 @@ from flask import Flask, redirect, url_for, render_template, request
 # To start server : 
 # First: C:\Users\OS\COEN6311\car-rental-all-class
 # Then: ./mvnw spring-boot:run
+# Please execute: "$env:FLASK_RUN_PORT = 5001" to change your port
 from datetime import date
 
 import requests, uuid, json
@@ -97,3 +98,5 @@ def delete():
     delete_r = requests.request('DELETE',url)
     return redirect(url_for("car_list"))
 
+if __name__ == '__main__':
+    app.run(port=5001)
