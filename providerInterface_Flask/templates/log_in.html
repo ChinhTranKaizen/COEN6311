@@ -4,20 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in</title>
+
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        form {border: 3px solid #f1f1f1;}
+        
+        input[type=text], input[type=password] {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+        }
+        
+        button {
+          background-color: #4c9baf;
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+        }
+        
+        button:hover {
+          opacity: 0.8;
+        }
+        
+        .container {
+          padding: 16px;
+        }
+        
+        span.psw {
+          float: right;
+          padding-top: 16px;
+        }
+        
+        @media screen and (max-width: 300px) {
+          span.psw {
+             display: block;
+             float: none;
+          }
+          .cancelbtn {
+             width: 100%;
+          }
+        }
+        </style>
 </head>
+
+
 <body>
     {% if response_status == 200%}
     <h2>You have registered successfully. Please log in to continue!</h2>
     {% endif %}
+    <h2>Emloyee Login</h2>
     <form action="{{url_for('login')}}" method="post">
-        <label for="username">Name: </label>
+    <div class="container">
+        <label for="username"><b>Name:</b></label>
         <input type="text" name="username">
-        <label for="password">Password:</label>
-        <input type="text" name="password">
-        <input type="submit" value="Log in">
+
+        <label for="password"><b>Password:</b></label>
+        <input type="password" name="password">
+
+        <button type="submit" value="Log in">Log in</button>
+    </div>
     </form>
-    <div>
-        <i>New employee?</i>
+    <div class="container">
+        <label for="new"><b>New employee?</b></label>
         <a href="{{url_for('register_form')}}"> <button>Register here!</button></a>
     </div>
 </body>
