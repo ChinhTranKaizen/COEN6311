@@ -18,7 +18,7 @@ public class Customer
 	private String firstname;
 	private String lastname;
 	private String email;
-	private Integer phone;
+	private String phone;
 	private String city;
 	private String country;
 	private String province;
@@ -27,27 +27,30 @@ public class Customer
 	protected Customer() {
 		
 	}
-
-	public Customer(Integer id, String username, String password, String firstname, String lastname, String email,
-			Integer phone, String city, String country, String province, String postal) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.email = email;
-		this.phone = phone;
-		this.city = city;
-		this.country = country;
-		this.province = province;
-		this.postal = postal;
-	}
+ // Contractor of the customer class
+	
+	
+	// getters and setters of the customer class attributes
 
 	public Integer getId() {
 		return id;
 	}
 
+	public Customer(Integer id, String username, String password, String firstname, String lastname, String email,
+		String phone, String city, String country, String province, String postal) {
+	super();
+	this.id = id;
+	this.username = username;
+	this.password = password;
+	this.firstname = firstname;
+	this.lastname = lastname;
+	this.email = email;
+	this.phone = phone;
+	this.city = city;
+	this.country = country;
+	this.province = province;
+	this.postal = postal;
+}
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -92,13 +95,16 @@ public class Customer
 		this.email = email;
 	}
 
-	public Integer getPhone() {
+
+	public String getPhone() {
 		return phone;
 	}
 
-	public void setPhone(Integer phone) {
+
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
+
 
 	public String getCity() {
 		return city;

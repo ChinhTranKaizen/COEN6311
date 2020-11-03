@@ -1,0 +1,35 @@
+├── src
+│   └── main
+│       ├── java
+│       │   └── carclasses
+│       │       └── example
+│       │           └── demo
+│       │               ├── CarRentalAllClassApplication.java
+│       │               ├── car
+│       │               │   ├── Car.java
+│       │               │   ├── CarController.java
+│       │               │   ├── CarRepository.java
+│       │               │   ├── CarService.java
+│       │               ├── customer
+│       │               │   ├── Customer.java
+│       │               │   ├── CustomerController.java
+│       │               │   ├── CustomerRepository.java
+│       │               │   ├── CustomerService.java
+│       │               ├── employee
+│       │               │   ├── Employee.java
+│       │               │   ├── EmployeeController.java
+│       │               │   ├── EmployeeRepository.java
+│       │               │   ├── EmployeeService.java
+│       ├── resources
+│           ├── application.properties
+│          
+└── pom.xml
+
+CarRentalAllClassApplication.java: is the main class
+car, customer, and employee: present the data structure:
+	_They are a packeges consist of definition of the class(e.g. car.java)
+	_Controller class for REST Controller:mapping
+	_Repository class is the implementation of the Jpa Repository methods
+	_Service class is a service that implements the methods for the controller class
+applicat.properties: file has the necessery properties of the application
+pom.xml: maven file that declare the dependencies

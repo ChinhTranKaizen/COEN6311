@@ -16,16 +16,23 @@ public class Car
 	private String entrydate;
 	private Integer kmdriven;
 	private Integer releaseyear;
+	// condition can be: new, slightly used, used, heavily used
 	private String condition;
 	private Integer pricekm;
+	//if state is true than the car is booked
     private boolean state;
+    //Brand : e.g. Mercedes, Toyota, etc.
     private String brand;
+    //Model: e.g. Corola
     private String model; 
+    //type can be: family, sport etc.
     private String type;
     private Integer priceday;
 	protected Car() {
 		
 	}
+	
+	// Contractor of the car class
 	public Car(Integer id, String entrydate, Integer kmdriven, Integer releaseyear, String condition, Integer pricekm,
 			boolean state, String brand, String model, String type, Integer priceday) {
 		super();
@@ -43,7 +50,7 @@ public class Car
 	}
 
 	
-	
+	// getters and setters of the car class attributes
 	public Integer getId() {
 		return id;
 	}

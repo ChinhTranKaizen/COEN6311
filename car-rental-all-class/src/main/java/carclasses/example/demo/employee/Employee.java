@@ -15,7 +15,8 @@ public class Employee
 	private Integer id;
 	private String name;
 	private String password;
-	private String position;// May change it enum in next sprint
+	// position can be : staff, manager, finance
+	private String position;
 	private String email;
 	
 	protected Employee() {
@@ -23,7 +24,7 @@ public class Employee
 	}
 	
 
-	
+	// Contractor of the employee class
 	public Employee(Integer id, String name, String password, String position, String email) {
 		super();
 		this.id = id;
@@ -34,7 +35,7 @@ public class Employee
 	}
 
 
-
+	// getters and setters of the employee class attributes
 	public Integer getId() {
 		return id;
 	}
