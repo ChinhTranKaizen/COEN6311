@@ -57,6 +57,8 @@
 <body>
     {% if response_status == 200%}
     <h2>You have registered successfully. Please log in to continue!</h2>
+    {% else %}
+    <h2>Your registration fails, please retry with registration link below.</h2>
     {% endif %}
     <h2>Emloyee Login</h2>
     <form action="{{url_for('login')}}" method="post">

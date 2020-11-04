@@ -9,39 +9,39 @@ import requests, uuid, json
 
 app = Flask(__name__)
 
-    # Cars data structure:
-    # Integer id;
-	# String entrydate;
-	# Integer kmdriven;
-	# Integer releaseyear;
-	# String condition;
-	# Integer pricekm;
+#The first page when starting provider interface: return the log_in page
 @app.route("/")
 def index():
     # This should return the login page if login successfully, return the index.html page
     return render_template("log_in.html")
 
+#This is a in-between route that processes log-in information
 @app.route("/login", methods =["POST"])
 def login():
+    #Set up the parameters for getting all employees from the database to process log-in information
     url = "http://localhost:3001/employees"
     r = requests.request("GET",url).json()
     username = str(request.form.get("username"))
     password = str(request.form.get("password"))
     login_token = False
+    #Check for every responses in the response message, if there is a match, change the token to True
     for response in r:
         if response["name"] == username and response["password"]==password:
             login_token = True
     if login_token:
-        return render_template("index.html")
+        return render_template("index.html") #log in sucessfully
     else:
-        return render_template("bad_log_in.html")
+        return render_template("bad_log_in.html") #log in fails
 
+#A route to open registration form html page
 @app.route("/register_form")
 def register_form():
     return render_template("register.html")
 
+#An in-between route that processes registration data and send to Java Spring boot
 @app.route("/register", methods = ["POST"])
 def register():
+    #Preparing the parameters to send the Java spring boot server
     url = 'http://localhost:3001/employees'
     params = {'id': str(request.form.get("id")),
         'name' : str(request.form.get("fullname")),
@@ -51,11 +51,16 @@ def register():
         }
 
     headers = {'content-type': 'application/json'}
+    #make the requests
     r = requests.request("POST", url, data = json.dumps(params),headers = headers)
+    #Depends on if the registration is successful or not, return it to display in log_in html
     return render_template("log_in.html", response_status = r.status_code)
 
+#An html page that displays the car list, whose content is fetched from the server
+#This also acts as an in-between page to process adding cars to the fleet requests from add_car_form below
 @app.route("/car_list", methods=["GET","POST"])
 def car_list():
+    #When a form sends post request to this route then the code below prep the parameters to send to the server.
     if request.method == "POST":
         url = "http://localhost:3001/cars"
         params = {'id': str(request.form.get("CarID")),
@@ -68,12 +73,13 @@ def car_list():
         headers = {'content-type': 'application/json'}
         r = requests.request('POST',url, data = json.dumps(params), headers=headers)
         
-    
+    #Prep the parameters to send GET requests to the car
     url = "http://localhost:3001/cars"
     r = requests.request("GET",url).json()
 
     return render_template("car_list.html",responses = r)
 
+#This redirects to a add_car_form page where you can fill in the form. upon submission the data is directed to car_list
 @app.route("/add_car_form")
 def add_car_form():
     
@@ -82,6 +88,7 @@ def add_car_form():
 
     return render_template("add_car_form.html",today = d1)
 
+#This is an route the directs to the confirmation for delete page with all the information of the targeted car
 @app.route("/delete_confirmation", methods=["POST"])
 def delete_confirmation():
     deleteID = str(request.form.get("DeleteID"))
@@ -92,6 +99,7 @@ def delete_confirmation():
     priceKm = str(request.form.get("DeletePricekm"))
     return render_template("delete_confirmation.html", deleteID = deleteID, entryDate = entryDate, kmDriven = kmDriven, releaseYear = releaseYear, condition = condition, priceKm = priceKm)
 
+#This is an in-between route to process delete requests based on ID.
 @app.route("/delete", methods=["POST"])
 def delete():
     url = 'http://localhost:3001/cars/' + str(request.form.get("DeleteID"))
