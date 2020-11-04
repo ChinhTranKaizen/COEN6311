@@ -15,7 +15,7 @@ app.config['SECRET_KEY'] = '123'
 
 app.secret_key = '123'
 app.config.update(SECRET_KEY='123')
-
+#Declare a connection with userdatabase which stores customer information
 db = pymysql.Connect(
     host='localhost',
     port=3306,
@@ -25,29 +25,34 @@ db = pymysql.Connect(
     charset='utf8'
 )
 
+#Points to the database for further connect
 cursor = db.cursor()
 
-
+#Routes to login page on start up
 @app.route('/')
 def index():
     return render_template("index.html")
 
 
-
+#The form on login page will send a post requests to this route to check if there is an entry in the database for such customer
 @app.route('/loginprocess',methods=["GET","POST"])
 def login():
+    #Get data back from the form
     username = str(request.form.get("username"))
     password = str(request.form.get("password"))
+    #Build a sql to go through customer database
     select_sql = 'select * from customer where username="%s" and password="%s";' % (username, password)
     try:
         cursor.execute(select_sql)
         results = cursor.fetchall()
         print(len(results))
+        #If there is a result in the query then returns login success page
         if len(results) == 1:
             session['username'] = username
             session.permanent = True
             return render_template("loginprocess.html")
         else:
+            #else return log in error page.
             return render_template("loginerr.html")
             db.commit()
     except:
@@ -62,10 +67,10 @@ def my_context_processor():
         return {'loginuser': user}
     return {}
 
-
+#This is a processor to add data to the database based on the data from the submitted form
 @app.route('/addcustomer', methods=["POST"])
 def registerprocess():
-
+    #Get data from the form using post method
     username = str(request.form.get("username"))
     password = str(request.form.get("password"))
     firstname = str(request.form.get("firstname"))
@@ -75,6 +80,7 @@ def registerprocess():
     address = str(request.form.get("address"))
     postal = str(request.form.get("postal"))
 
+    #Insert a new customer into post request
     insert_user_sql = 'INSERT INTO customer(username, password,firstname,lastname,email,phone,address,postal) ' \
                       'VALUES (\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\");' % (
                       username, password, firstname, lastname, email, phone, address, postal)
@@ -89,11 +95,13 @@ def registerprocess():
         db.rollback()
     return render_template("registererr.html")
 
-
+#When this route is called, return the registration page.
 @app.route('/register', methods=["GET", "POST"])
 def register():
     return render_template("user-register.html")
 
+#This is an inbetween route that process the modifying profile process, if the appending to the data base is successful then returns
+#modify sucess else return modify error
 @app.route('/modifyprofile', methods=["POST"])
 def modify():
     currentuser = str(session.get('username'))
@@ -117,6 +125,7 @@ def modify():
         db.rollback()
         return render_template("modifyerr.html")
 
+#This route is to route to modify profile html page.
 @app.route('/userprofile', methods=["GET","POST"])
 def modifyprofile():
 
@@ -124,9 +133,6 @@ def modifyprofile():
     select_sql = 'select * from customer where username= "%s" ;' % (currentuser)
     cursor.execute(select_sql)
     row = cursor.fetchall()
-
-
-
 
     return render_template("modifyprofile.html", row=row)
 
