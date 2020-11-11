@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for, render_template, request
-# To start server : 
+# To start server :
 # First: C:\Users\OS\COEN6311\car-rental-all-class
 # Then: ./mvnw spring-boot:run
 # Please execute: "$env:FLASK_RUN_PORT = 5001" to change your port
@@ -72,7 +72,7 @@ def car_list():
             }
         headers = {'content-type': 'application/json'}
         r = requests.request('POST',url, data = json.dumps(params), headers=headers)
-        
+
     #Prep the parameters to send GET requests to the car
     url = "http://localhost:3001/cars"
     r = requests.request("GET",url).json()
@@ -82,7 +82,7 @@ def car_list():
 #This redirects to a add_car_form page where you can fill in the form. upon submission the data is directed to car_list
 @app.route("/add_car_form")
 def add_car_form():
-    
+
     today = date.today()
     d1 = today.strftime("%Y-%m-%d")
 
@@ -94,7 +94,7 @@ def delete_confirmation():
     deleteID = str(request.form.get("DeleteID"))
     entryDate = str(request.form.get("DeleteEntrydate"))
     kmDriven = str(request.form.get("DeleteKmdriven"))
-    releaseYear = str(request.form.get("DeleteReleaseyear")) 
+    releaseYear = str(request.form.get("DeleteReleaseyear"))
     condition = str(request.form.get("DeleteCondition"))
     priceKm = str(request.form.get("DeletePricekm"))
     return render_template("delete_confirmation.html", deleteID = deleteID, entryDate = entryDate, kmDriven = kmDriven, releaseYear = releaseYear, condition = condition, priceKm = priceKm)
@@ -105,6 +105,87 @@ def delete():
     url = 'http://localhost:3001/cars/' + str(request.form.get("DeleteID"))
     delete_r = requests.request('DELETE',url)
     return redirect(url_for("car_list"))
+
+#Sprint 2: edit details of a car
+
+@app.route("/edit_car",methods=["POST"])
+def edit_car():
+    editID = str(request.form.get("EditID"))
+    editEntryDate = str(request.form.get("EditEntrydate"))
+    editKmdriven = str(request.form.get("EditKmdriven"))
+    editReleaseYear = str(request.form.get("EditReleaseyear"))
+    editCondition = str(request.form.get("EditCondition"))
+    editPricekm = str(request.form.get("EditPricekm"))
+    today = datetime.date.today()
+    d1 = today.strftime("%Y-%m-%d")
+
+    return render_template("edit_car.html",today = d1, editID=editID,editEntryDate=editEntryDate,editKmdriven=editKmdriven,editReleaseYear=editReleaseYear,editCondition=editCondition,editPricekm=editPricekm)
+
+@app.route("/wrapup_edit",methods=["POST"])
+def wrapup_edit():
+    PutID = str(request.form.get("oldID"))
+
+    if str(request.form.get("EntryDate")) == "":
+        PutEntryDate = str(request.form.get("oldEntrydate"))
+    else:
+        PutEntryDate = str(request.form.get("EntryDate"))
+
+    if str(request.form.get("KmDriven")) == "":
+        PutKmDriven = str(request.form.get("oldKmdriven"))
+    else:
+        PutKmDriven = str(request.form.get("KmDriven"))
+
+    if str(request.form.get("ReleaseYear")) == "":
+        PutReleaseYear = str(request.form.get("oldReleaseyear"))
+    else:
+        PutReleaseYear = str(request.form.get("ReleaseYear"))
+
+    if str(request.form.get("CarCondition")) == "":
+        PutCarCondition = str(request.form.get("oldCondition"))
+    else:
+        PutCarCondition = str(request.form.get("CarCondition"))
+
+    if str(request.form.get("PriceKm")) == "":
+        PutPriceKm = str(request.form.get("oldPricekm"))
+    else:
+        PutPriceKm = str(request.form.get("PriceKm"))
+
+    url = "http://localhost:3001/cars" + "/" + PutID
+    params = {'id': PutID,
+            'entrydate': PutEntryDate,
+            'kmdriven': PutKmDriven,
+            'releaseyear': PutReleaseYear,
+            'condition': PutCarCondition,
+            'pricekm': PutPriceKm
+            }
+
+    headers = {'content-type': 'application/json'}
+    r = requests.request('PUT',url, data = json.dumps(params), headers=headers)
+
+    return redirect(url_for("car_list"))
+
+#Sprint 2: filter car with a form
+@app.route("/filter_form")
+def filter_form():
+    today = datetime.date.today()
+    d1 = today.strftime("%Y-%m-%d")
+    return render_template("filter_form.html",today=d1)
+
+@app.route("/filter_carlist", methods = ["POST"])
+def filter_carlist():
+
+    #Get the response from the server
+    url = "http://localhost:3001/cars"
+    r = requests.request("GET",url).json()
+
+    #Get the responses from the html filter_form
+
+
+    #Applied the filtering function:
+    filtered_response = ""
+
+    return render_template("carlist.html",responses = filtered_response)
+
 
 if __name__ == '__main__':
     app.run(port=5001)
