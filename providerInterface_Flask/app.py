@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session, abort, jsonify
+from flask import Flask, redirect, url_for, render_template, request, session, abort, make_response
 # To start server :
 # First: C:\Users\OS\COEN6311\car-rental-all-class
 # Then: ./mvnw spring-boot:run
@@ -14,7 +14,7 @@ app.secret_key = "coen6311"
 def index():
     # This should return the login page if login successfully, return the index.html page
     if session.get('username') is not None:
-        render_template("index.html", username = session.get('username'), position = session.get('position'))
+        return render_template("index.html", username = session.get('username'), position = session.get('position'))
     else:
         return render_template("log_in.html")
 
@@ -30,9 +30,12 @@ def login():
     #Check for every responses in the response message, if there is a match, change the token to username
     for response in r:
         if response["name"] == username and response["password"]==password:
-            session['username'] = response['name']
-            session['position'] = response['position']
-            break
+            if response["activation"] == False:
+                return abort(make_response({'message': 'Your account is not activated. Please contact the manager.'},400))
+            else:
+                session['username'] = response['name']
+                session['position'] = response['position']
+                break
     if session.get('username') is not None:
         return render_template("index.html", username = session.get('username'), position = session.get('position')) #log in sucessfully
     else:
@@ -45,12 +48,14 @@ def register_form():
         return render_template("register.html")
     elif request.method == "POST":
         #Preparing the parameters to send the Java spring boot server
+        #Needs to add data verification here
         url = 'http://localhost:3001/employees'
         params = {'id': str(request.form.get("id")),
             'name' : str(request.form.get("fullname")),
             'password' : str(request.form.get("password")),
             'position' : str(request.form.get("position")),
-            'email' : str(request.form.get("email"))
+            'email' : str(request.form.get("email")),
+            'activation' : str(request.form.get('activation'))
             }
 
         headers = {'content-type': 'application/json'}
@@ -65,10 +70,29 @@ def logout():
     session.pop('position', None)
     return redirect(url_for('index'))
 
-@app.route('/manage_accounts')
+@app.route('/manage_accounts',methods = ["GET", "POST"])
 def manage_accounts():
+    url = "http://localhost:3001/employees"
+    r = requests.request("GET",url).json()
+    if request.method == "GET":
+        employees = []
+        for user in r:
+            if user['activation'] == False:
+                user.pop('password', None)
+                employees.append(user)
 
-    return render_template('manage_accounts.html')
+        return render_template('manage_accounts.html',employees=employees)
+    if request.method == "POST":
+        employee_id = request.form.get('id')
+        put_employee = {}
+        for employee in r:
+            if employee['id'] == int(employee_id):
+                put_employee = employee
+                put_employee['activation'] = True
+        headers = {'content-type': 'application/json'}
+        url = 'http://localhost:3001/employees/'+str(employee_id)
+        r = requests.put(url, data =json.dumps(put_employee),headers=headers)
+        return redirect(url_for('manage_accounts'))
 
 #An html page that displays the car list, whose content is fetched from the server
 #This also acts as an in-between page to process adding cars to the fleet requests from add_car_form below
@@ -81,7 +105,7 @@ def car_list():
         date2 = str(request.form.get("ReleaseYear"))
         date3 = datetime.now().strftime("%Y-%m-%d")
         if int(date1[0:4])<int(date2):
-            return abort(jsonify(message = "The entry year cannot be smaller than the release year."),400)
+            return abort(make_response({'message': "The entry year cannot be smaller than the release year."},400))
         else:
             params = {'id': str(request.form.get("CarID")),
                 'entrydate': str(request.form.get("EntryDate")),
@@ -255,7 +279,7 @@ def filter_form():
                         r.remove(car)
             if EntryDateMin !="" and EntryDateMax !="":
                 if date_a < date_b:
-                    return abort(jsonify(message = "The max entry year cannot be smaller than the min entry year."),400)
+                    return abort(make_response({'message': "The max entry year cannot be smaller than the min entry year."},400))
 
         #Processing Km Driven data
         KmDrivenMax = request.form.get('KmDrivenMax')
@@ -272,7 +296,7 @@ def filter_form():
                     if c<int(KmDrivenMin):
                         r.remove(car)
             if (KmDrivenMax != "" and KmDrivenMin != "") and (int(KmDrivenMax) < int(KmDrivenMin)):
-                return abort(jsonify(message = "The max km driven cannot be smaller than the min km driven."),400)
+                return abort(make_response({'message': "The max km driven cannot be smaller than the min km driven."},400))
 
         #Processing release year
         ReleaseYearMax = request.form.get('ReleaseYearMax')
@@ -289,7 +313,7 @@ def filter_form():
                     if c<int(ReleaseYearMin):
                         r.remove(car)
             if (ReleaseYearMax != "" and ReleaseYearMin != "") and (int(ReleaseYearMax) < int(ReleaseYearMin)):
-                return abort(jsonify(message = "The max release year cannot be smaller than the min release year."),400)
+                return abort(make_response({'message': "The max release year cannot be smaller than the min release year."},400))
 
         #Procesing CarCondition
         CarCondition = request.form.get('CarCondition')
@@ -334,7 +358,7 @@ def filter_form():
                     if c<int(PriceKmMin):
                         r.remove(car)
             if (PriceKmMax != "" and PriceKmMin != "") and (int(PriceKmMax) < int(PriceKmMin)):
-                return abort(jsonify(message = "The max price per km cannot be smaller than the min price per km."),400)
+                return abort(make_response({'message': "The max price per km cannot be smaller than the min price per km."},400))
 
         #Processing price per day
         PriceDayMax = request.form.get('PriceDayMax')
@@ -351,7 +375,7 @@ def filter_form():
                     if c<int(PriceDayMin):
                         r.remove(car)
             if (PriceDayMax != "" and PriceDayMin != "") and (int(PriceDayMax) < int(PriceDayMin)):
-                return abort(jsonify(message = "The max price per day cannot be smaller than the min price per day."),400)
+                return abort(make_response({'message': "The max price per day cannot be smaller than the min price per day."},400))
 
         filtered_response = r
         print(filtered_response)
@@ -361,7 +385,6 @@ def filter_form():
         today = date.today()
         d1 = today.strftime("%Y-%m-%d")
         return render_template("filter_form.html",today=d1)
-
 
 if __name__ == '__main__':
     app.run(port=5001)

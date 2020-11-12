@@ -6,6 +6,17 @@
     <title>Manage accounts </title>
 </head>
 <body>
-
+    <a href="{{url_for('index')}}">Back to index</a> <br><br>
+    {% for employee in employees %}
+    <form action="{{url_for('manage_accounts')}}" method="POST">
+        {% set id = employee['id']  %}
+        ID: {{employee['id']}} -
+        Name: {{employee['name']}} -
+        Position: {{employee['position']}} -
+        Email: {{employee['email']}}
+        <input type="hidden" name = "id" value="{{id}}">
+        <input type="submit" value="Activate">
+    </form>
+    {% endfor %}
 </body>
 </html>
