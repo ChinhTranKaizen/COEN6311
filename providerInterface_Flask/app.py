@@ -4,8 +4,9 @@ from flask import Flask, redirect, url_for, render_template, request, session, a
 # Then: ./mvnw spring-boot:run
 # Please execute: "$env:FLASK_RUN_PORT = 5001" to change your port
 from datetime import date, datetime
-
 import requests, uuid, json
+
+import checkemail
 
 app = Flask(__name__)
 app.secret_key = "coen6311"
@@ -48,21 +49,29 @@ def register_form():
         return render_template("register.html")
     elif request.method == "POST":
         #Preparing the parameters to send the Java spring boot server
-        #Needs to add data verification here
-        url = 'http://localhost:3001/employees'
-        params = {'id': str(request.form.get("id")),
-            'name' : str(request.form.get("fullname")),
-            'password' : str(request.form.get("password")),
-            'position' : str(request.form.get("position")),
-            'email' : str(request.form.get("email")),
-            'activation' : str(request.form.get('activation'))
-            }
+        if len(str(request.form.get("password"))) < 8:
+            abort(make_response({'message': 'Password needs to be at least 8 characters'},400))
+        elif str(request.form.get("position")) != "Staff" or str(request.form.get("position")) != "Finance":
+            abort(make_response({'message': 'New employees can only be Staff or Finance'},400))
+        elif not checkemail.check(str(request.form.get("email"))):
+            abort(make_response({'message': 'Email entered is invalid'},400))
+        elif str(request.form.get('activation')) != "false":
+            abort(make_response({'message': 'New user must await activation from manager'},400))
+        else:
+            url = 'http://localhost:3001/employees'
+            params = {'id': str(request.form.get("id")),
+                'name' : str(request.form.get("fullname")),
+                'password' : str(request.form.get("password")),
+                'position' : str(request.form.get("position")),
+                'email' : str(request.form.get("email")),
+                'activation' : str(request.form.get('activation'))
+                }
 
-        headers = {'content-type': 'application/json'}
-        #make the requests
-        r = requests.request("POST", url, data = json.dumps(params),headers = headers)
-        #Depends on if the registration is successful or not, return it to display in log_in html
-        return render_template("log_in.html", response_status = r.status_code)
+            headers = {'content-type': 'application/json'}
+            #make the requests
+            r = requests.request("POST", url, data = json.dumps(params),headers = headers)
+            #Depends on if the registration is successful or not, return it to display in log_in html
+            return render_template("log_in.html", response_status = r.status_code)
 
 @app.route("/logout")
 def logout():
