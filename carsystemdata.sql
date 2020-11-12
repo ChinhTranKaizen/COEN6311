@@ -6,8 +6,8 @@ CREATE TABLE `customers` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
-  `first_name` varchar(50) NOT NULL,
-  `last_name` varchar(50) NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `lastname` varchar(50) NOT NULL,
   `birth_date` date DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
@@ -52,3 +52,24 @@ INSERT INTO `employees` VALUES (301,'301301301','Guthrey','Iacopetti','Executive
 INSERT INTO `employees` VALUES (302,'302302302','Kass','Hefferan','Staff','Kass302@hotmail.com');
 INSERT INTO `employees` VALUES (303,'303303303','Virge','Goodrum','Staff','Virge303@hotmail.com');
 INSERT INTO `employees` VALUES (304,'304304304','Mirilla','Janowski','technical maintainer','Mirilla@hotmail.com');
+
+
+CREATE TABLE `cars` (
+  `car_id` int(11) NOT NULL,
+  `entrydate` varchar(50) NOT NULL,
+  `kmdriven` varchar(50) NOT NULL,
+  `condition` varchar(50) NOT NULL,
+  `price/km` varchar(50) NOT NULL,
+  `brand` varchar(50) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `price/day` varchar(50) DEFAULT NULL,
+  
+  PRIMARY KEY (`car_id`)
+  
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO `cars` VALUES (1001,'2019-10-24','20','verygood','0.6$','Ford','fullsize','45$');
+INSERT INTO `cars` VALUES (1002,'2018-05-06','100','good','0.5$','Ford','standard','45$');
+INSERT INTO `cars` VALUES (1003,'2019-10-24','50','very good','0.7$','Ford','standardsuv','52$');
+INSERT INTO `cars` VALUES (1004,'2018-12-09','200','good','0.6$','Ford','premiumsuv','58$');
+INSERT INTO `cars` VALUES (1005,'2019-08-29','1000','good','0.6$','Ford','minivan','60$');
+
