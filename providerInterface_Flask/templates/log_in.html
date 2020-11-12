@@ -4,61 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log in</title>
-
-    <style>
-        body {font-family: Arial, Helvetica, sans-serif;}
-        form {border: 3px solid #f1f1f1;}
-        
-        input[type=text], input[type=password] {
-          width: 100%;
-          padding: 12px 20px;
-          margin: 8px 0;
-          display: inline-block;
-          border: 1px solid #ccc;
-          box-sizing: border-box;
-        }
-        
-        button {
-          background-color: #4c9baf;
-          color: white;
-          padding: 14px 20px;
-          margin: 8px 0;
-          border: none;
-          cursor: pointer;
-          width: 100%;
-        }
-        
-        button:hover {
-          opacity: 0.8;
-        }
-        
-        .container {
-          padding: 16px;
-        }
-        
-        span.psw {
-          float: right;
-          padding-top: 16px;
-        }
-        
-        @media screen and (max-width: 300px) {
-          span.psw {
-             display: block;
-             float: none;
-          }
-          .cancelbtn {
-             width: 100%;
-          }
-        }
-        </style>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/log_in.css')}}">
 </head>
 
 
 <body>
-    {% if response_status == 200%}
+    {% if response_status is defined%}
+    {% if response_status == 200 %}
     <h2>You have registered successfully. Please log in to continue!</h2>
     {% else %}
     <h2>Your registration fails, please retry with registration link below.</h2>
+    {% endif %}
     {% endif %}
     <h2>Emloyee Login</h2>
     <form action="{{url_for('login')}}" method="post">

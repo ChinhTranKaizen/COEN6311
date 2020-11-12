@@ -3,61 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/register.css')}}">
     <title>Register</title>
 
     <style>
-        body {
-          font-family: Arial, Helvetica, sans-serif;
-          background-color: lightgrey;
-        }
-        
-        * {
-          box-sizing: border-box;
-        }
-        
-        .container {
-          padding: 16px;
-          background-color: white;
-        }
-        
-        input[type=text], input[type=password] ,input[type=email]{
-          width: 100%;
-          padding: 15px;
-          margin: 5px 0 22px 0;
-          display: inline-block;
-          border: none;
-          background: #f1f1f1;
-        }
-        
-        input[type=text]:focus, input[type=password]:focus {
-          background-color: #ddd;
-          outline: none;
-        }
-        
-        hr {
-          border: 1px solid #f1f1f1;
-          margin-bottom: 25px;
-        }
-        
-        .registerbtn {
-          background-color: #4c9baf;
-          color: white;
-          padding: 16px 20px;
-          margin: 8px 0;
-          border: none;
-          cursor: pointer;
-          width: 100%;
-          opacity: 0.9;
-        }
-        
-        .registerbtn:hover {
-          opacity: 1;
-        }
-        
-        .signin {
-          background-color: #f1f1f1;
-          text-align: center;
-        }
+
         </style>
 
 </head>
@@ -66,25 +16,27 @@
     <div class="container">
 
     <form action="{{url_for('register')}}" method="post">
-        
+
         <input type="hidden" value="0" name ="id">
-        
+
         <label for="fullname"><b>Full name:</b></label> <br>
         <input type="text" required name="fullname"> <br><br>
-        
+
         <label for="password"><b>Password:</b></label><br>
         <input type="password" required name="password"> <br><br>
-        
-        <label for="position"><b>Position:</b></label> <br>      
-        <select name="position">
-            <option value="Staff">Staff</option>
-            <option value="Finance">Finance</option>
-            <option value="Manager">Manager</option>
-        </select> <br> <br>
-        
+
+        <label for="position"><b>Position:</b></label> <br>
+        <div class="custom-select" style="width:200px;">
+          <select name="position">
+              <option value="Staff">Staff</option>
+              <option value="Finance">Finance</option>
+          </select>
+        </div>
+         <br> <br>
+
         <label for="email"><b>Email:</b></label> <br>
         <input type="email" name="email">
-        
+
         <button type="submit" class="registerbtn" value="Register">Register</button>
 
     </div>
