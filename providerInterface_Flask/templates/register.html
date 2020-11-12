@@ -15,7 +15,7 @@
     <h1>Register new employee account</h1>
     <div class="container">
 
-    <form action="{{url_for('register')}}" method="post">
+    <form action="{{url_for('register_form')}}" method="post">
 
         <input type="hidden" value="0" name ="id">
 
@@ -26,7 +26,7 @@
         <input type="password" required name="password"> <br><br>
 
         <label for="position"><b>Position:</b></label> <br>
-        <div class="custom-select" style="width:200px;">
+        <div class="custom-select">
           <select name="position">
               <option value="Staff">Staff</option>
               <option value="Finance">Finance</option>

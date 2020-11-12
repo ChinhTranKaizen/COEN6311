@@ -6,7 +6,11 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Hello users!</h1>
+    <h1>Hello {{username}}. You are currently log in as {{position}}</h1>
+    <a href="{{url_for('logout')}}">Log out</a>
     <a href="{{url_for('car_list')}}">Car list...</a>
+    {% if position == "Manager" %}
+    <a href="{{url_for('manage_accounts')}}">Manage employee accounts</a>
+    {% endif %}
 </body>
 </html>

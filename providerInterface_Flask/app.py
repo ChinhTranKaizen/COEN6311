@@ -13,7 +13,10 @@ app.secret_key = "coen6311"
 @app.route("/")
 def index():
     # This should return the login page if login successfully, return the index.html page
-    return render_template("log_in.html",login_token = session.get('token'))
+    if session.get('username') is not None:
+        render_template("index.html", username = session.get('username'), position = session.get('position'))
+    else:
+        return render_template("log_in.html")
 
 #This is a in-between route that processes log-in information
 @app.route("/login", methods =["POST"])
@@ -24,38 +27,48 @@ def login():
     username = str(request.form.get("username"))
     password = str(request.form.get("password"))
 
-    #Check for every responses in the response message, if there is a match, change the token to True
+    #Check for every responses in the response message, if there is a match, change the token to username
     for response in r:
         if response["name"] == username and response["password"]==password:
-            session['token'] = True
+            session['username'] = response['name']
+            session['position'] = response['position']
             break
-    if session.get('token') is not None:
-        return render_template("index.html", log_in = session.get('token')) #log in sucessfully
+    if session.get('username') is not None:
+        return render_template("index.html", username = session.get('username'), position = session.get('position')) #log in sucessfully
     else:
         return render_template("bad_log_in.html") #log in fails
 
 #A route to open registration form html page
-@app.route("/register_form")
+@app.route("/register_form", methods = ["GET", "POST"])
 def register_form():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
+    elif request.method == "POST":
+        #Preparing the parameters to send the Java spring boot server
+        url = 'http://localhost:3001/employees'
+        params = {'id': str(request.form.get("id")),
+            'name' : str(request.form.get("fullname")),
+            'password' : str(request.form.get("password")),
+            'position' : str(request.form.get("position")),
+            'email' : str(request.form.get("email"))
+            }
 
-#An in-between route that processes registration data and send to Java Spring boot
-@app.route("/register", methods = ["POST"])
-def register():
-    #Preparing the parameters to send the Java spring boot server
-    url = 'http://localhost:3001/employees'
-    params = {'id': str(request.form.get("id")),
-        'name' : str(request.form.get("fullname")),
-        'password' : str(request.form.get("password")),
-        'position' : str(request.form.get("position")),
-        'email' : str(request.form.get("email"))
-        }
+        headers = {'content-type': 'application/json'}
+        #make the requests
+        r = requests.request("POST", url, data = json.dumps(params),headers = headers)
+        #Depends on if the registration is successful or not, return it to display in log_in html
+        return render_template("log_in.html", response_status = r.status_code)
 
-    headers = {'content-type': 'application/json'}
-    #make the requests
-    r = requests.request("POST", url, data = json.dumps(params),headers = headers)
-    #Depends on if the registration is successful or not, return it to display in log_in html
-    return render_template("log_in.html", response_status = r.status_code)
+@app.route("/logout")
+def logout():
+    session.pop('username', None)
+    session.pop('position', None)
+    return redirect(url_for('index'))
+
+@app.route('/manage_accounts')
+def manage_accounts():
+
+    return render_template('manage_accounts.html')
 
 #An html page that displays the car list, whose content is fetched from the server
 #This also acts as an in-between page to process adding cars to the fleet requests from add_car_form below
@@ -89,7 +102,7 @@ def car_list():
     url = "http://localhost:3001/cars"
     r = requests.request("GET",url).json()
 
-    return render_template("car_list.html",responses = r)
+    return render_template("car_list.html",responses = r,username = session.get('username'), position = session.get('position'))
 
 #This redirects to a add_car_form page where you can fill in the form. upon submission the data is directed to car_list
 @app.route("/add_car_form")
@@ -144,7 +157,7 @@ def edit_car():
     today = datetime.date.today()
     d1 = today.strftime("%Y-%m-%d")
 
-    return render_template("edit_car.html",today = d1, editcar = editcar)
+    return render_template("edit_car.html",today = d1, editcar = editcar, position = session.get('position'))
 
 @app.route("/wrapup_edit",methods=["POST"])
 def wrapup_edit():
@@ -342,7 +355,7 @@ def filter_form():
 
         filtered_response = r
         print(filtered_response)
-        return render_template("car_list.html", responses = filtered_response)
+        return render_template("car_list.html", responses = filtered_response, username = session.get('username'), position = session.get('position'))
 
     elif request.method == "GET":
         today = date.today()
