@@ -51,7 +51,7 @@ def register_form():
         #Preparing the parameters to send the Java spring boot server
         if len(str(request.form.get("password"))) < 8:
             abort(make_response({'message': 'Password needs to be at least 8 characters'},400))
-        elif str(request.form.get("position")) != "Staff" or str(request.form.get("position")) != "Finance":
+        elif str(request.form.get("position")) != "Staff":
             abort(make_response({'message': 'New employees can only be Staff or Finance'},400))
         elif not checkemail.check(str(request.form.get("email"))):
             abort(make_response({'message': 'Email entered is invalid'},400))
