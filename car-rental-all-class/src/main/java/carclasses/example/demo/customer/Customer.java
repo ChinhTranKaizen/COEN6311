@@ -1,58 +1,87 @@
 package carclasses.example.demo.customer;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 //indicating that it is a JPA entity
 @Entity
+@Table(name="Customer")
 public class Customer 
 {
 	//so that JPA recognizes it as the object’s ID
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	
+    @Column(name="customerid")
+	private Integer customerid;
+	
+	@Column(name="username")
 	private String username;
+	
+
+	@Column(name="password")
 	private String password;
+	
+	@Column(name="firstname")
 	private String firstname;
+	
+	@Column(name="lastname")
 	private String lastname;
-	private String email;
+	
+	@Column(name="phone")
 	private String phone;
-	private String city;
+	
+	@Column(name="email")
+	private String email;
+	
+	@Column(name="country")
 	private String country;
+	
+	@Column(name="city")
+	private String city;
+	
+	@Column(name="province")
 	private String province;
+	
+	@Column(name="postal")
 	private String postal;
+	
+	@Column(name="activation")
+	private boolean activation;
 
 	protected Customer() {
 		
 	}
  // Contractor of the customer class
-	
-	
-	// getters and setters of the customer class attributes
 
-	public Integer getId() {
-		return id;
-	}
-
-	public Customer(Integer id, String username, String password, String firstname, String lastname, String email,
-		String phone, String city, String country, String province, String postal) {
+	public Customer(Integer customerid, String username, String password, String firstname, String lastname, String phone,
+		String email, String country, String city, String province, String postal, boolean activation) {
 	super();
-	this.id = id;
+	this.customerid = customerid;
 	this.username = username;
 	this.password = password;
 	this.firstname = firstname;
 	this.lastname = lastname;
-	this.email = email;
 	this.phone = phone;
-	this.city = city;
+	this.email = email;
 	this.country = country;
+	this.city = city;
 	this.province = province;
 	this.postal = postal;
+	this.activation = activation;
 }
-	public void setId(Integer id) {
-		this.id = id;
+
+	
+	public Integer getCustomerid() {
+		return customerid;
+	}
+
+	public void setCustomerid(Integer customerid) {
+		this.customerid = customerid;
 	}
 
 	public String getUsername() {
@@ -87,6 +116,14 @@ public class Customer
 		this.lastname = lastname;
 	}
 
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -95,16 +132,13 @@ public class Customer
 		this.email = email;
 	}
 
-
-	public String getPhone() {
-		return phone;
+	public String getCountry() {
+		return country;
 	}
 
-
-	public void setPhone(String phone) {
-		this.phone = phone;
+	public void setCountry(String country) {
+		this.country = country;
 	}
-
 
 	public String getCity() {
 		return city;
@@ -112,14 +146,6 @@ public class Customer
 
 	public void setCity(String city) {
 		this.city = city;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
 	}
 
 	public String getProvince() {
@@ -137,6 +163,19 @@ public class Customer
 	public void setPostal(String postal) {
 		this.postal = postal;
 	}
+
+	public boolean isActivation() {
+		return activation;
+	}
+
+	public void setActivation(boolean activation) {
+		this.activation = activation;
+	}
+	
+	
+
+	// getters and setters of the customer class attributes
+
 
 	
 }	

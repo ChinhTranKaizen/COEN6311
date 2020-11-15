@@ -26,10 +26,10 @@ public class EmployeeController
 		return employeeService.getAllEmployees();
 	}
 	//return an employee using its id to localhost:3001/employee/id
-	@GetMapping(value="/employees/{id}")
-	public Optional<Employee> getEmployee(@PathVariable Integer id)
+	@GetMapping(value="/employees/{employeeid}")
+	public Optional<Employee> getEmployee(@PathVariable Integer employeeid)
 	{
-		return employeeService.getEmployee(id);
+		return employeeService.getEmployee(employeeid);
 	}
 	
 	// receive an employee from localhost:3001/employees
@@ -39,17 +39,17 @@ public class EmployeeController
 		employeeService.addEmployee(employee);
 	}
 	// update an employee using its id to localhost:3001/employee/id
-    @PutMapping(value="/employees/{id}")
-	public void updateEmployee(@RequestBody Employee employee, @PathVariable Integer id )
+    @PutMapping(value="/employees/{employeeid}")
+	public void updateEmployee(@RequestBody Employee employee, @PathVariable Integer employeeid )
 	{
-		employeeService.updateEmployee(id, employee);
+		 employeeService.updateEmployee(employeeid, employee);
 	}
 	
   //delete an employee using its id to localhost:3001/employee/id
-    @DeleteMapping(value="/employees/{id}")
-    public void deleteEmployee(@PathVariable Integer id)
+    @DeleteMapping(value="/employees/{employeeid}")
+    public void deleteEmployee(@PathVariable Integer employeeid)
 	{
-		employeeService.deleteEmployee(id);
+		employeeService.deleteEmployee(employeeid);
 	}
 	
 

@@ -23,9 +23,9 @@ public class EmployeeService
 		return employeeRepository.findAll();
 	}
 	//search and  return an employee by id from DB
-	public Optional<Employee> getEmployee(Integer id)
+	public Optional<Employee> getEmployee(Integer employeeid)
 	{
-		return employeeRepository.findById(id);
+		return employeeRepository.findById(employeeid);
 	}
 	
 	// add an employee to DB
@@ -34,14 +34,14 @@ public class EmployeeService
 		employeeRepository.save(employee);
 	}
 	// update an employee in DB by its id 
-	public void updateEmployee( Integer id, Employee employee)
+	public void updateEmployee( Integer employeeid, Employee employee)
 	{
-		employeeRepository.save(employee);
+		  employeeRepository.save(employee);
 	}
 	// delete an employee from DB by its id 
-	public void deleteEmployee( Integer id)
+	public void deleteEmployee( Integer employeeid)
 	{
-		employeeRepository.deleteById(id);
+		employeeRepository.deleteById(employeeid);
 	}
 
 	

@@ -23,9 +23,9 @@ public class CustomerService
 		return customerRepository.findAll();
 	}
 	//search and  return a customer by id from DB
-	public Optional<Customer> getCustomer(Integer id)
+	public Optional<Customer> getCustomer(Integer customerid)
 	{
-		return customerRepository.findById(id);
+		return customerRepository.findById(customerid);
 	}
 	
 	// add a customer to DB
@@ -34,14 +34,14 @@ public class CustomerService
 		customerRepository.save(customer);
 	}
 	// update a customer in DB by its id 
-	public void updateCustomer (Integer id, Customer customer)
+	public void updateCustomer (Integer customerid, Customer customer)
 	{
 		customerRepository.save(customer);
 	}
 	// delete a customer from DB by its id 
-	public void deleteCustomer( Integer id)
+	public void deleteCustomer( Integer customerid)
 	{
-		customerRepository.deleteById(id);
+		customerRepository.deleteById(customerid);
 	}
 
 	

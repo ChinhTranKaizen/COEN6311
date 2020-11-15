@@ -21,9 +21,9 @@ public class CarService
 		return carRepository.findAll();
 	}
 	//search and  return a car by id from DB
-	public Optional<Car> getCar(Integer id)
+	public Optional<Car> getCar(Integer carid)
 	{
-		return carRepository.findById(id);
+		return carRepository.findById(carid);
 	}
 	
 	// add a car to DB
@@ -32,14 +32,14 @@ public class CarService
 		carRepository.save(car);
 	}
 	// update a car in DB by its id 
-	public void updateCar (Integer id, Car car)
+	public void updateCar (Integer carid, Car car)
 	{
 		carRepository.save(car);
 	}
 	// delete a car from DB by its id 
-	public void deleteCar( Integer id)
+	public void deleteCar( Integer carid)
 	{
-		carRepository.deleteById(id);
+		carRepository.deleteById(carid);
 	}
 
 	

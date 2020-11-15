@@ -26,10 +26,10 @@ public class CustomerController
 		return customerService.getAllCustomers();
 	}
 	//return a customer using its id to localhost:3001/customer/id
-	@GetMapping(value="/customers/{id}")
-	public Optional<Customer> getCustomer(@PathVariable Integer id)
+	@GetMapping(value="/customers/{customerid}")
+	public Optional<Customer> getCustomer(@PathVariable Integer customerid)
 	{
-		return customerService.getCustomer(id);
+		return customerService.getCustomer(customerid);
 	}
 	
 	// receive a customer from localhost:3001/customers
@@ -39,17 +39,17 @@ public class CustomerController
 		customerService.addCustomer(customer);
 	}
 	// update a customer using its id to localhost:3001/customer/id
-    @PutMapping(value="/customers/{id}")
-	public void updateCustomer(@RequestBody Customer customer, @PathVariable Integer id )
+    @PutMapping(value="/customers/{customerid}")
+	public void updateCustomer(@RequestBody Customer customer, @PathVariable Integer customerid )
 	{
-    	customerService.updateCustomer(id, customer);
+    	customerService.updateCustomer(customerid, customer);
 	}
 	
   //delete a customer using its id to localhost:3001/customer/id
-    @DeleteMapping(value="/customers/{id}")
-    public void deleteCustomer(@PathVariable Integer id)
+    @DeleteMapping(value="/customers/{customerid}")
+    public void deleteCustomer(@PathVariable Integer customerid)
 	{
-    	customerService.deleteCustomer(id);
+    	customerService.deleteCustomer(customerid);
 	}
 	
 
