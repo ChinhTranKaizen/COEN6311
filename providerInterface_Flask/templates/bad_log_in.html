@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/bad_log_in.css')}}">
+    <title>Bad login</title>
+
+</head>
+<body>
+<div class="container">
+    <h1>Bad log in requests: incorrect name or password</h1> <br>
+    <h2>Retry <a href="{{url_for('index')}}">log in</a>? </h2> <br>
+    <h2>Don't have an account? <a href="{{url_for('register_form')}}"> Register here!</a></h2> <br>
+</div>
+</body>
+</html>

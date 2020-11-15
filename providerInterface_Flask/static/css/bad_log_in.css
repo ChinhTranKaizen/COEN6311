@@ -1,0 +1,13 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: lightgrey;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .container {
+    padding: 16px;
+    background-color: white;
+  }

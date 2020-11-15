@@ -1,4 +1,5 @@
 ----------------------------------------------------------------
+<<<<<<< HEAD
 Mon Nov 09 14:01:23 WAT 2020:
 Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0175-ad18-bb78-000000d9a8d0 
 on database directory memory:C:\Users\Asus\Documents\workspace-spring-tool-suite-4-4.8.0.RELEASE\car-rental-all-class\a69ba3df-39c5-4b8e-8c8b-edd7bc246f1b with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@3b192d32 
@@ -6,6 +7,15 @@ Loaded from file:/C:/Users/Asus/.m2/repository/org/apache/derby/derby/10.14.2.0/
 java.vendor=Oracle Corporation
 java.runtime.version=14.0.2+12-46
 user.dir=C:\Users\Asus\Documents\workspace-spring-tool-suite-4-4.8.0.RELEASE\car-rental-all-class
+=======
+Fri Nov 13 12:19:23 EST 2020:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0175-c29e-64db-000007d037b0 
+on database directory memory:C:\Users\OS\COEN6311\car-rental-all-class\717cbc1a-46e7-4cfb-a178-c36f25b02e9a with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@30946e09 
+Loaded from file:/C:/Users/OS/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=AdoptOpenJDK
+java.runtime.version=11.0.9+11
+user.dir=C:\Users\OS\COEN6311\car-rental-all-class
+>>>>>>> 5a6b534db9ba507b4933c3eccac7e33d690fad2a
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0

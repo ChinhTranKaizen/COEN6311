@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/register.css')}}">
+    <title>Register</title>
+
+    <style>
+
+        </style>
+
+</head>
+<body>
+    <h1>Register new employee account</h1>
+    <div class="container">
+
+    <form action="{{url_for('register_form')}}" method="post">
+
+        <input type="hidden" value="0" name ="id">
+
+        <label for="fullname"><b>Full name:</b></label> <br>
+        <input type="text" required name="fullname"> <br><br>
+
+        <label for="password"><b>Password:</b></label><br>
+        <input type="password" required name="password" minlength="8"> <br><br>
+
+        <label for="position"><b>Position:</b></label> <br>
+        <div class="custom-select">
+          <select name="position">
+              <option value="Staff">Staff</option>
+              <option value="Finance">Finance</option>
+          </select>
+        </div>
+         <br> <br>
+
+        <label for="email"><b>Email:</b></label> <br>
+        <input type="email" name="email">
+
+        <input type="hidden" value="false" name ="activation">
+
+        <button type="submit" class="registerbtn" value="Register">Register</button>
+
+    </div>
+    </form>
+    <div class="container">
+        <label><b>Already have an account?</b></label>
+        <a href="{{url_for('index')}}"> <button class="registerbtn">Sign in here!</button></a>
+    </div>
+</body>
+</html>

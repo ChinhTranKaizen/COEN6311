@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2><p>hello  {{ loginuser }}</p><br></h2>>
+<p>Your information is:</p><br>
+username,password,firstname,lastname,e-mail,phone,address,postal<br>
+{{ row }}<br>
+<p>Please modify your profile:</p>>
+<form method="post" action="/modifyprofile">
+    <label>Password：<input type="password" name="password" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <label>Firstname：<input type="text" name="firstname" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <label>Lastname：<input type="text" name="lastname" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <label>E-mail：<input type="text" name="email" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <label>Phone：<input type="text" name="phone" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <label>Address：<input type="text" name="address" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <label>postal：<input type="text" name="postal" value="" required
+       minlength="1" maxlength="30" size="20"></label><br>
+    <input type="submit" value="Modify">
+</form>
+
+
+</body>
+</html>

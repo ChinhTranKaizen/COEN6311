@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h3>Are you sure you want to delete the following car:</h3>
+    <form id="delete_form" action="{{ url_for('delete') }}" method="post">
+        <label>CarID: {{deletecar['deleteID']}}</label>
+        {% set id = deletecar['deleteID'] %}
+        <input type="hidden" name="DeleteID" value={{id}}>
+        <label>Entry date: {{deletecar['entryDate']}}</label> <br>
+        <label>Km driven: {{deletecar['kmDriven']}}</label> <br>
+        <label>Release year: {{deletecar['releaseYear']}}</label> <br>
+        <label>Condition: {{deletecar['condition']}}</label> <br>
+        <label>Brand: {{deletecar['brand']}} </label> <br>
+        <label>Car type : {{deletecar['type']}} </label> <br>
+        <label>Availability: {{deletecar['state']}}</label> <br>
+        <label>Price per Km: {{deletecar['priceKm']}}</label> <br>
+        <label>Price per day: {{deletecar['priceday']}} </label> <br>
+        <input type="submit" value="Confirm">
+    </form>
+    <a href="{{url_for('car_list')}}"><button>Cancel</button></a>
+</body>
+</html>

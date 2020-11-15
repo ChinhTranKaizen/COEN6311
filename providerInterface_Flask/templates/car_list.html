@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/car_list.js')}}"></script>
+    <title>Document</title>
+</head>
+<body>
+    <!-- Sprint 2: Filter form for cars -->
+    <!-- Check if responses is an empty string -->
+    <h1>Hello {{username}}. You are currently log in as {{position}}. <a href="{{url_for('logout')}}">Log out</a></h1>
+    <a href="{{ url_for('filter_form') }}" > <button>Filter cars</button> </a>
+    <a href="{{ url_for('car_list') }}" > <button>Refresh car list</button> </a> <br> <br>
+    <!-- Sprint 2: End of filter form -->
+    {% for response in responses %}
+    {% set carID = response["id"] %}
+    {% set entryDate = response["entrydate"] %}
+    {% set kmDriven = response["kmdriven"] %}
+    {% set releaseYear = response["releaseyear"] %}
+    {% set condition = response["condition"] %}
+    {% set brand = response["brand"] %}
+    {% set type = response["type"] %}
+    {% set state = response["state"] %}
+    {% set priceday = response["priceday"] %}
+    {% set priceKm = response["pricekm"] %}
+
+    <ul>
+        <li>
+            Car ID: {{carID}} -
+            Car entrydate: {{entryDate}} -
+            Brand: {{brand}} -
+            Car type : {{type}} -
+            Km driven: {{kmDriven}} -
+            Release year: {{releaseYear}} -
+            Availability: {{state}} -
+            Condition: {{condition}} -
+            Price per km: {{priceKm}} -
+            Price per day: {{priceday}}
+
+            {% if position != "Staff" %}
+                <form id="delete_form" action="{{ url_for('delete_confirmation') }}" method="post">
+                    <input type="hidden" name="DeleteID" value={{carID}}>
+                    <input type="hidden" name="DeleteEntrydate" value={{entryDate}}>
+                    <input type="hidden" name="DeleteKmdriven" value={{kmDriven}}>
+                    <input type="hidden" name="DeleteReleaseyear" value={{releaseYear}}>
+                    <input type="hidden" name="DeleteCondition" value={{condition}}>
+                    <input type="hidden" name="DeletePricekm" value={{priceKm}}>
+                    <input type="hidden" name="DeleteBrand" value={{brand}}>
+                    <input type="hidden" name="DeleteType" value={{type}}>
+                    <input type="hidden" name="DeleteState" value={{state}}>
+                    <input type="hidden" name="DeletePriceday" value={{priceday}}>
+                    <input type="submit" value="Remove Car">
+                </form>
+            {% endif %}
+
+            <!-- Sprint 2 functionalities: -->
+            <form id="edit_form" action="{{ url_for('edit_car') }}" method="post">
+                <input type="hidden" name="EditID" value={{carID}}>
+                <input type="hidden" name="EditEntrydate" value={{entryDate}}>
+                <input type="hidden" name="EditKmdriven" value={{kmDriven}}>
+                <input type="hidden" name="EditReleaseyear" value={{releaseYear}}>
+                <input type="hidden" name="EditCondition" value={{condition}}>
+                <input type="hidden" name="EditPricekm" value={{priceKm}}>
+                <input type="hidden" name="EditBrand" value={{brand}}>
+                <input type="hidden" name="EditType" value={{type}}>
+                <input type="hidden" name="EditState" value={{state}}>
+                <input type="hidden" name="EditPriceday" value={{priceday}}>
+                <input type="submit" value="Edit Car">
+            </form>
+            <!-- Sprint 2 functionalities - END -->
+        </li>
+    </ul>
+    {% endfor %}
+
+    {% if position != "Staff" %}
+        <a href="{{ url_for('add_car_form') }}" > <button>Add car...</button> </a>
+    {% endif %}
+</body>
+</html>

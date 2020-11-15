@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/log_in.css')}}">
+</head>
+
+
+<body>
+    {% if response_status is defined%}
+        {% if response_status == 200 %}
+        <h2>You have registered successfully. Please log in to continue!</h2>
+        {% else %}
+        <h2>Your registration fails, please retry with registration link below.</h2>
+        {% endif %}
+    {% endif %}
+    <h2>Emloyee Login</h2>
+    <form action="{{url_for('login')}}" method="post">
+    <div class="container">
+        <label for="username"><b>Name:</b></label>
+        <input type="text" name="username">
+
+        <label for="password"><b>Password:</b></label>
+        <input type="password" name="password">
+
+        <button type="submit" value="Log in">Log in</button>
+    </div>
+    </form>
+    <div class="container">
+        <label><b>New employee?</b></label>
+        <a href="{{url_for('register_form')}}"> <button>Register here!</button></a>
+    </div>
+</body>
+</html>

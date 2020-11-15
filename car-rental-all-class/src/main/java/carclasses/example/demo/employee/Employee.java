@@ -9,8 +9,12 @@ import javax.persistence.Table;
 
 //indicating that it is a JPA entity
 @Entity
+<<<<<<< HEAD
 @Table(name="Employee")
 public class Employee 
+=======
+public class Employee
+>>>>>>> 5a6b534db9ba507b4933c3eccac7e33d690fad2a
 {
 	//so that JPA recognizes it as the object’s ID
 	@Id
@@ -31,19 +35,28 @@ public class Employee
 	
 	@Column(name="email")
 	private String email;
+<<<<<<< HEAD
 	
 	@Column(name="activation")
 	private boolean activation;
+=======
+	private Boolean activation;
+>>>>>>> 5a6b534db9ba507b4933c3eccac7e33d690fad2a
 	protected Employee() {
-		
-	}
-	
 
+	}
+
+<<<<<<< HEAD
 	// Contractor of the employee class
 	
 
 	public Employee(Integer employeeid, String password, String name, String position, String email,
 			boolean activation) {
+=======
+
+
+	public Employee(Integer id, String name, String password, String position, String email, Boolean activation) {
+>>>>>>> 5a6b534db9ba507b4933c3eccac7e33d690fad2a
 		super();
 		this.employeeid = employeeid;
 		this.password = password;
@@ -99,6 +112,7 @@ public class Employee
 		this.email = email;
 	}
 
+<<<<<<< HEAD
 
 	public boolean isActivation() {
 		return activation;
@@ -111,5 +125,15 @@ public class Employee
 	
 	
 	
+=======
+	public Boolean getActivation() {
+		return activation;
+	}
+
+	public void setActivation(Boolean activation) {
+		this.activation = activation;
+	}
+
+>>>>>>> 5a6b534db9ba507b4933c3eccac7e33d690fad2a
 
 }
