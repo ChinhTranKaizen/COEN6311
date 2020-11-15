@@ -79,7 +79,7 @@ public class Employee
 		this.email = email;
 	}
 
-	public String getActivation() {
+	public Boolean getActivation() {
 		return activation;
 	}
 
