@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 //indicating that it is a JPA entity
 @Entity
-public class Employee 
+public class Employee
 {
 	//so that JPA recognizes it as the object’s ID
 	@Id
@@ -17,20 +17,22 @@ public class Employee
 	private String password;
 	private String position;// May change it enum in next sprint
 	private String email;
-	
-	protected Employee() {
-		
-	}
-	
+	private Boolean activation;
 
-	
-	public Employee(Integer id, String name, String password, String position, String email) {
+	protected Employee() {
+
+	}
+
+
+
+	public Employee(Integer id, String name, String password, String position, String email, Boolean activation) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.password = password;
 		this.position = position;
 		this.email = email;
+		this.activation = activation;
 	}
 
 
@@ -76,8 +78,14 @@ public class Employee
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
-	
+
+	public String getActivation() {
+		return activation;
+	}
+
+	public void setActivation(Boolean activation) {
+		this.activation = activation;
+	}
+
 
 }
