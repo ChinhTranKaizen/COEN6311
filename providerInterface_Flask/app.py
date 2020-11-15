@@ -221,35 +221,35 @@ def edit_car():
 
 @app.route("/wrapup_edit",methods=["POST"])
 def wrapup_edit():
-    # if str(request.form.get("oldID")) == "" or str(request.form.get("oldID")) is None:
-    #     abort(make_response({'message': 'Must contain ID'},400))
+    if str(request.form.get("oldID")) == "" or str(request.form.get("oldID")) is None:
+        abort(make_response({'message': 'Must contain ID'},400))
 
-    # if str(request.form.get("oldEntryDate")) == "" or request.form.get("oldEntryDate") is None:
-    #     abort(make_response({'message': 'Must contain oldEntryDate'},400))
+    if str(request.form.get("oldEntrydate")) == "" or request.form.get("oldEntrydate") is None:
+        abort(make_response({'message': 'Must contain oldEntryDate'},400))
 
-    # if str(request.form.get("oldKmDriven")) == "" or request.form.get("oldKmDriven") is None:
-    #     abort(make_response({'message': 'Must contain oldKmDriven'},400))
+    if str(request.form.get("oldKmdriven")) == "" or request.form.get("oldKmdriven") is None:
+        abort(make_response({'message': 'Must contain oldKmDriven'},400))
 
-    # if str(request.form.get("oldReleaseYear")) == "" or request.form.get("oldReleaseYear") is None:
-    #     abort(make_response({'message': 'Must contain oldReleaseYear'},400))
+    if str(request.form.get("oldReleaseyear")) == "" or request.form.get("oldReleaseyear") is None:
+        abort(make_response({'message': 'Must contain oldReleaseYear'},400))
 
-    # if str(request.form.get("oldCarCondition")) == "" or request.form.get("oldCarCondition") is None:
-    #     abort(make_response({'message': 'Must contain oldCarCondition'},400))
+    if str(request.form.get("oldCondition")) == "" or request.form.get("oldCondition") is None:
+        abort(make_response({'message': 'Must contain oldCarCondition'},400))
 
-    # if str(request.form.get("oldPriceKm")) == "" or request.form.get("oldPriceKm") is None:
-    #     abort(make_response({'message': 'Must contain oldPriceKm'},400))
+    if str(request.form.get("oldPricekm")) == "" or request.form.get("oldPricekm") is None:
+        abort(make_response({'message': 'Must contain oldPriceKm'},400))
 
-    # if str(request.form.get("oldPriceDay")) == "" or request.form.get("oldPriceDay") is None:
-    #     abort(make_response({'message': 'Must contain oldPriceDay'},400))
+    if str(request.form.get("oldPriceday")) == "" or request.form.get("oldPriceday") is None:
+        abort(make_response({'message': 'Must contain oldPriceDay'},400))
 
-    # if str(request.form.get("oldBrand")) == "" or request.form.get("oldBrand") is None:
-    #     abort(make_response({'message': 'Must contain oldBrand'},400))
+    if str(request.form.get("oldBrand")) == "" or request.form.get("oldBrand") is None:
+        abort(make_response({'message': 'Must contain oldBrand'},400))
 
-    # if str(request.form.get("oldType")) == "" or request.form.get("oldType") is None:
-    #     abort(make_response({'message': 'Must contain oldType'},400))
+    if str(request.form.get("oldType")) == "" or request.form.get("oldType") is None:
+        abort(make_response({'message': 'Must contain oldType'},400))
 
-    # if str(request.form.get("oldState")) == "" or request.form.get("oldState") is None:
-    #     abort(make_response({'message': 'Must contain oldState'},400))
+    if str(request.form.get("oldState")) == "" or request.form.get("oldState") is None:
+        abort(make_response({'message': 'Must contain oldState'},400))
 
     PutID = str(request.form.get("oldID"))
 
