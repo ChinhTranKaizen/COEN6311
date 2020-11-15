@@ -29,8 +29,8 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
+			<groupId>org.apache.derby</groupId>
+			<artifactId>derby</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
