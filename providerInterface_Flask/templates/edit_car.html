@@ -7,33 +7,46 @@
 </head>
 <body>
 
-    {% set editID = editcar["editID"] %}
-    {% set editEntryDate = editcar["editEntryDate"] %}
-    {% set editKmdriven = editcar["editKmdriven"] %}
-    {% set editReleaseYear = editcar["editReleaseYear"] %}
-    {% set editCondition = editcar["editCondition"] %}
-    {% set editBrand = editcar["editBrand"] %}
-    {% set editType = editcar["editType"] %}
-    {% set editState = editcar["editState"] %}
-    {% set editPriceday = editcar["editPriceday"] %}
-    {% set editPricekm = editcar["editPricekm"] %}
+    {% set editID = editcar['editID'] %}
+    {% set editEntryDate = editcar['editEntryDate'] %}
+    {% set editKmdriven = editcar['editKmdriven'] %}
+    {% set editReleaseYear = editcar['editReleaseYear'] %}
+    {% set editCondition = editcar['editCondition'] %}
+    {% set editBrand = editcar['editBrand'] %}
+    {% set editType = editcar['editType'] %}
+    {% set editState = editcar['editState'] %}
+    {% set editPriceday = editcar['editPriceday'] %}
+    {% set editPricekm = editcar['editPricekm'] %}
 
+<!--
+    {{editID}}
+    {{editEntryDate}}
+    {{editKmdriven}}
+    {{editReleaseYear}}
+    {{editCondition}}
+    {{editBrand}}
+    {{editType}}
+    {{editState}}
+    {{editPriceday}}
+    {{editPricekm}} -->
     <h3>Edit car {{editID}}</h3>
     <h4><i>Blank fields are assumed to take old values</i></h4>
     <form action="{{ url_for('wrapup_edit')}}" method = 'post'>
         <input type="hidden" name="oldID" value="{{editID}}">
+        <input type="hidden" name="oldEntrydate" value="{{editEntryDate}}">
+        <input type="hidden" name="oldKmdriven" value="{{editKmdriven}}">
+        <input type="hidden" name="oldReleaseyear" value="{{editReleaseYear}}">
+        <input type="hidden" name="oldBrand" value="{{editBrand}}">
+        <input type="hidden" name="oldType" value="{{editType}}">
         {% if position != "Staff" %}
             <label>Old entry date was: {{editEntryDate}} - New entry date: </label>
-            <input type="date" name="EntryDate" max="{{today}}">
-            <input type="hidden" name="oldEntrydate" value="{{editEntryDate}}"> <br><br>
+            <input type="date" name="EntryDate" max="{{today}}"><br><br>
 
             <label>Old km driven was: {{editKmdriven}} - New km driven: </label>
-            <input type="number" name="KmDriven" min="0" max = "300000">
-            <input type="hidden" name="oldKmdriven" value="{{editKmdriven}}"><br><br>
+            <input type="number" name="KmDriven" min="0" max = "300000"><br><br>
 
             <label>Old release year was: {{editKmdriven}} - New release year: </label>
-            <input type="number" name="ReleaseYear" min="1950" max = "{{today[0:4]}}">
-            <input type="hidden" name="oldReleaseyear" value="{{editReleaseYear}}"> <br><br>
+            <input type="number" name="ReleaseYear" min="1950" max = "{{today[0:4]}}"><br><br>
 
             <label>Old car brand was: {{editBrand}} - New brand: </label>
             <select name="Brand">
@@ -43,8 +56,7 @@
                 <option value="Mazda">Mazda</option>
                 <option value="Nissan">Nissan</option>
                 <option value="Subaru">Subaru</option>
-            </select>
-            <input type="hidden" name="oldBrand" value="{{editBrand}}"><br><br>
+            </select><br><br>
 
             <label>Old car type was: {{editType}} - New car type: </label>
             <select name="Type">
@@ -55,7 +67,7 @@
                 <option value="Crossover">Crossover</option>
                 <option value="Wagon">Wagon</option>
             </select>
-            <input type="hidden" name="oldType" value="{{editType}}"><br><br>
+            <br><br>
         {% endif %}
         <!-- Staff position can only change the availability of a car and the condition of a car-->
         <label>Old availability was: {{editState}} - New availability: </label>
@@ -75,15 +87,16 @@
             <option value="old">Old</option>
         </select>
         <input type="hidden" name="oldCondition" value="{{editCondition}}"><br><br>
-
+        <input type="hidden" name="oldPriceday" value="{{editPriceday}}">
+        <input type="hidden" name="oldPricekm" value="{{editPricekm}}">
         {% if position != "Staff" %}
             <label>Old price per day was {{editPriceday}} - New Price per km:</label>
             <input type="number" name="PriceDay" min="0" max = "100">
-            <input type="hidden" name="oldPriceday" value="{{editPriceday}}"><br><br>
+            <br><br>
 
             <label>Old price per km was {{editPricekm}} - New Price per km:</label>
             <input type="number" name="PriceKm" min="0" max = "100">
-            <input type="hidden" name="oldPricekm" value="{{editPricekm}}"><br><br>
+            <br><br>
         {% endif %}
         <input type="submit" value="Save changes">
     </form>
