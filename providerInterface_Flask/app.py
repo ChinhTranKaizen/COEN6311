@@ -404,8 +404,11 @@ def filter_form():
                 return abort(make_response({'message': "The max release year cannot be smaller than the min release year."},400))
 
         #Procesing CarCondition
+        conditions = ["new","slightly used","used","old"]
         CarCondition = request.form.get('CarCondition')
         if CarCondition != "":
+            if CarCondition not in conditions:
+                abort(make_response({'message': "Invalid car condition given"},400))
             cars_for_removal = []
             for car in r:
                 if car['condition']!=CarCondition:
@@ -414,8 +417,11 @@ def filter_form():
                 r.remove(car)
 
         #Processing Car brands
+        brands = ["Toyota","Honda","Mazda","Nissan","Subaru"]
         Brand = request.form.get('Brand')
         if Brand != "":
+            if Brand not in brands:
+                abort(make_response({'message': "Invalid car brand given"},400))
             cars_for_removal = []
             for car in r:
                 if car['brand']!=Brand:
@@ -424,8 +430,11 @@ def filter_form():
                 r.remove(car)
 
         #Processing Car types
+        types = ["Sedan","SUV","Minivan","Crossover","Wagon"]
         Type = request.form.get('Type')
         if Type != "":
+            if Type not in types:
+                abort(make_response({'message': "Invalid car type given"},400))
             cars_for_removal = []
             for car in r:
                 if car['type']!=Type:
@@ -434,8 +443,11 @@ def filter_form():
                 r.remove(car)
 
         #Processing Car states
+        states = ["True", "False"]
         CarState = request.form.get('CarState')
         if CarState != "":
+            if CarState not in states:
+                abort(make_response({'message': "Invalid car state given"},400))
             cars_for_removal = []
             for car in r:
                 if car['state']!=CarState:
