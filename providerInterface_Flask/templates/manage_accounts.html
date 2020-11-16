@@ -9,8 +9,8 @@
     <a href="{{url_for('index')}}">Back to index</a> <br><br>
     {% for employee in employees %}
     <form action="{{url_for('manage_accounts')}}" method="POST">
-        {% set id = employee['id']  %}
-        ID: {{employee['id']}} -
+        {% set id = employee['employeeid']  %}
+        ID: {{employee['employeeid']}} -
         Name: {{employee['name']}} -
         Position: {{employee['position']}} -
         Email: {{employee['email']}}

@@ -66,7 +66,7 @@ def register_form():
                 elif response1['email'] == str(request.form.get("email")):
                     abort(make_response({'message': 'Email already exists.'},400))
 
-            params = {'id': str(request.form.get("id")),
+            params = {'employeeid': str(request.form.get("id")),
                 'name' : str(request.form.get("fullname")),
                 'password' : str(request.form.get("password")),
                 'position' : str(request.form.get("position")),
@@ -102,7 +102,7 @@ def manage_accounts():
         employee_id = request.form.get('id')
         put_employee = {}
         for employee in r:
-            if employee['id'] == int(employee_id):
+            if employee['employeeid'] == int(employee_id):
                 put_employee = employee
                 put_employee['activation'] = True
         headers = {'content-type': 'application/json'}
@@ -144,16 +144,16 @@ def car_list():
         if int(date1[0:4])<int(date2):
             return abort(make_response({'message': "The entry year cannot be smaller than the release year."},400))
         else:
-            params = {'id': str(request.form.get("CarID")),
+            params = {'carid': str(request.form.get("CarID")),
                 'entrydate': str(request.form.get("EntryDate")),
                 'kmdriven': str(request.form.get("KmDriven")),
                 'releaseyear': str(request.form.get("ReleaseYear")),
-                'condition': str(request.form.get("CarCondition")),
+                'condi': str(request.form.get("CarCondition")),
                 'pricekm': str(request.form.get("PriceKm")),
                 "state": str(request.form.get("CarState")),
                 "brand": str(request.form.get("Brand")),
                 "model": "",
-                "type": str(request.form.get("Type")),
+                "style": str(request.form.get("Type")),
                 "priceday": str(request.form.get("PriceDay"))
                 }
             headers = {'content-type': 'application/json'}
@@ -304,19 +304,20 @@ def wrapup_edit():
         return abort(make_response({'message': "The entry year cannot be smaller than the release year."},400))
     else:
         url = "http://localhost:3001/cars" + "/" + PutID
-        params = {'id': PutID,
+        params = {'carid': PutID,
                 'entrydate': PutEntryDate,
                 'kmdriven': PutKmDriven,
                 'releaseyear': PutReleaseYear,
-                'condition': PutCarCondition,
+                'condi': PutCarCondition,
                 'pricekm': PutPriceKm,
                 "state": PutState,
                 "brand": PutBrand,
                 "model": "",
-                "type": PutType,
+                "style": PutType,
                 "priceday": PutPriceDay
                 }
-
+        print(params)
+        print(url)
         headers = {'content-type': 'application/json'}
         r = requests.request('PUT',url, data = json.dumps(params), headers=headers)
 
@@ -411,7 +412,7 @@ def filter_form():
                 abort(make_response({'message': "Invalid car condition given"},400))
             cars_for_removal = []
             for car in r:
-                if car['condition']!=CarCondition:
+                if car['condi']!=CarCondition:
                     cars_for_removal.append(car)
             for car in cars_for_removal:
                 r.remove(car)
