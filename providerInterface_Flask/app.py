@@ -88,6 +88,8 @@ def logout():
 
 @app.route('/manage_accounts',methods = ["GET", "POST"])
 def manage_accounts():
+    if session.get('position') == "Staff" or session.get('position') == "Finance":
+        abort(make_response({'message': 'Not enough authorization'},404))
     url = "http://localhost:3001/employees"
     r = requests.request("GET",url).json()
     if request.method == "GET":
@@ -168,7 +170,8 @@ def car_list():
 #This redirects to a add_car_form page where you can fill in the form. upon submission the data is directed to car_list
 @app.route("/add_car_form")
 def add_car_form():
-
+    if session.get('position') == "Staff":
+        abort(make_response({'message': 'Not enough authorization'},404))
     today = date.today()
     d1 = today.strftime("%Y-%m-%d")
 
@@ -177,6 +180,8 @@ def add_car_form():
 #This is an route the directs to the confirmation for delete page with all the information of the targeted car
 @app.route("/delete_confirmation", methods=["POST"])
 def delete_confirmation():
+    if session.get('position') == "Staff":
+        abort(make_response({'message': 'Not enough authorization'},404))
     deletecar = {
         'deleteID' : str(request.form.get("DeleteID")),
         'entryDate' : str(request.form.get("DeleteEntrydate")),
@@ -195,6 +200,8 @@ def delete_confirmation():
 #This is an in-between route to process delete requests based on ID.
 @app.route("/delete", methods=["POST"])
 def delete():
+    if session.get('position') == "Staff":
+        abort(make_response({'message': 'Not enough authorization'},404))
     url = 'http://localhost:3001/cars/' + str(request.form.get("DeleteID"))
     delete_r = requests.request('DELETE',url)
     return redirect(url_for("car_list"))
@@ -256,16 +263,22 @@ def wrapup_edit():
     if str(request.form.get("EntryDate")) == "" or request.form.get("EntryDate") is None:
         PutEntryDate = str(request.form.get("oldEntrydate"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutEntryDate = str(request.form.get("EntryDate"))
 
     if str(request.form.get("KmDriven")) == "" or request.form.get("KmDriven") is None:
         PutKmDriven = str(request.form.get("oldKmdriven"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutKmDriven = str(request.form.get("KmDriven"))
 
     if str(request.form.get("ReleaseYear")) == "" or request.form.get("ReleaseYear") is None:
         PutReleaseYear = str(request.form.get("oldReleaseyear"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutReleaseYear = str(request.form.get("ReleaseYear"))
 
     if str(request.form.get("CarCondition")) == "" or request.form.get("CarCondition") is None:
@@ -276,21 +289,29 @@ def wrapup_edit():
     if str(request.form.get("PriceKm")) == "" or request.form.get("PriceKm") is None:
         PutPriceKm = str(request.form.get("oldPricekm"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutPriceKm = str(request.form.get("PriceKm"))
 
     if str(request.form.get("PriceDay")) == "" or request.form.get("PriceDay") is None:
         PutPriceDay = str(request.form.get("oldPriceday"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutPriceDay = str(request.form.get("PriceDay"))
 
     if str(request.form.get("Brand")) == "" or request.form.get("Brand") is None:
         PutBrand = str(request.form.get("oldBrand"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutBrand = str(request.form.get("Brand"))
 
     if str(request.form.get("Type")) == "" or request.form.get("Type") is None:
         PutType = str(request.form.get("oldType"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutType = str(request.form.get("Type"))
 
     if str(request.form.get("State")) == "" or request.form.get("State") is None:
