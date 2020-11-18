@@ -23,7 +23,7 @@
         <input type="text" required name="fullname"> <br><br>
 
         <label for="password"><b>Password:</b></label><br>
-        <input type="password" required name="password"> <br><br>
+        <input type="password" required name="password" minlength="8"> <br><br>
 
         <label for="position"><b>Position:</b></label> <br>
         <div class="custom-select">
@@ -37,9 +37,15 @@
         <label for="email"><b>Email:</b></label> <br>
         <input type="email" name="email">
 
+        <input type="hidden" value="false" name ="activation">
+
         <button type="submit" class="registerbtn" value="Register">Register</button>
 
     </div>
     </form>
+    <div class="container">
+        <label><b>Already have an account?</b></label>
+        <a href="{{url_for('index')}}"> <button class="registerbtn">Sign in here!</button></a>
+    </div>
 </body>
 </html>

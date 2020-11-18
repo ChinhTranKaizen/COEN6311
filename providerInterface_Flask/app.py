@@ -1,11 +1,12 @@
-from flask import Flask, redirect, url_for, render_template, request, session, abort, jsonify
+from flask import Flask, redirect, url_for, render_template, request, session, abort, make_response
 # To start server :
 # First: C:\Users\OS\COEN6311\car-rental-all-class
 # Then: ./mvnw spring-boot:run
 # Please execute: "$env:FLASK_RUN_PORT = 5001" to change your port
 from datetime import date, datetime
-
 import requests, uuid, json
+
+import checkemail
 
 app = Flask(__name__)
 app.secret_key = "coen6311"
@@ -14,7 +15,7 @@ app.secret_key = "coen6311"
 def index():
     # This should return the login page if login successfully, return the index.html page
     if session.get('username') is not None:
-        render_template("index.html", username = session.get('username'), position = session.get('position'))
+        return render_template("index.html", username = session.get('username'), position = session.get('position'))
     else:
         return render_template("log_in.html")
 
@@ -30,9 +31,12 @@ def login():
     #Check for every responses in the response message, if there is a match, change the token to username
     for response in r:
         if response["name"] == username and response["password"]==password:
-            session['username'] = response['name']
-            session['position'] = response['position']
-            break
+            if response["activation"] == False:
+                return abort(make_response({'message': 'Your account is not activated. Please contact the manager.'},400))
+            else:
+                session['username'] = response['name']
+                session['position'] = response['position']
+                break
     if session.get('username') is not None:
         return render_template("index.html", username = session.get('username'), position = session.get('position')) #log in sucessfully
     else:
@@ -45,19 +49,36 @@ def register_form():
         return render_template("register.html")
     elif request.method == "POST":
         #Preparing the parameters to send the Java spring boot server
-        url = 'http://localhost:3001/employees'
-        params = {'id': str(request.form.get("id")),
-            'name' : str(request.form.get("fullname")),
-            'password' : str(request.form.get("password")),
-            'position' : str(request.form.get("position")),
-            'email' : str(request.form.get("email"))
-            }
+        if len(str(request.form.get("password"))) < 8:
+            abort(make_response({'message': 'Password needs to be at least 8 characters'},400))
+        elif str(request.form.get("position")) != "Staff" and str(request.form.get("position")) != "Finance":
+            abort(make_response({'message': 'New employees can only be Staff or Finance'},400))
+        elif not checkemail.check(str(request.form.get("email"))):
+            abort(make_response({'message': 'Email entered is invalid'},400))
+        elif str(request.form.get('activation')) != "false":
+            abort(make_response({'message': 'New user must await activation from manager'},400))
+        else:
+            url = 'http://localhost:3001/employees'
+            r1 = requests.get(url).json()
+            for response1 in r1:
+                if response1['name'] == str(request.form.get("fullname")):
+                    abort(make_response({'message': 'Name already exists.'},400))
+                elif response1['email'] == str(request.form.get("email")):
+                    abort(make_response({'message': 'Email already exists.'},400))
 
-        headers = {'content-type': 'application/json'}
-        #make the requests
-        r = requests.request("POST", url, data = json.dumps(params),headers = headers)
-        #Depends on if the registration is successful or not, return it to display in log_in html
-        return render_template("log_in.html", response_status = r.status_code)
+            params = {'employeeid': str(request.form.get("id")),
+                'name' : str(request.form.get("fullname")),
+                'password' : str(request.form.get("password")),
+                'position' : str(request.form.get("position")),
+                'email' : str(request.form.get("email")),
+                'activation' : str(request.form.get('activation'))
+                }
+
+            headers = {'content-type': 'application/json'}
+            #make the requests
+            r = requests.request("POST", url, data = json.dumps(params),headers = headers)
+            #Depends on if the registration is successful or not, return it to display in log_in html
+            return render_template("log_in.html", response_status = r.status_code)
 
 @app.route("/logout")
 def logout():
@@ -65,34 +86,80 @@ def logout():
     session.pop('position', None)
     return redirect(url_for('index'))
 
-@app.route('/manage_accounts')
+@app.route('/manage_accounts',methods = ["GET", "POST"])
 def manage_accounts():
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+    elif session.get('position') == "Staff" or session.get('position') == "Finance":
+        abort(make_response({'message': 'Not enough authorization'},404))
+    url = "http://localhost:3001/employees"
+    r = requests.request("GET",url).json()
+    if request.method == "GET":
+        employees = []
+        for user in r:
+            if user['activation'] == False:
+                user.pop('password', None)
+                employees.append(user)
 
-    return render_template('manage_accounts.html')
+        return render_template('manage_accounts.html',employees=employees)
+    if request.method == "POST":
+        employee_id = request.form.get('id')
+        put_employee = {}
+        for employee in r:
+            if employee['employeeid'] == int(employee_id):
+                put_employee = employee
+                put_employee['activation'] = True
+        headers = {'content-type': 'application/json'}
+        url = 'http://localhost:3001/employees/'+str(employee_id)
+        r = requests.put(url, data =json.dumps(put_employee),headers=headers)
+        return redirect(url_for('manage_accounts'))
 
 #An html page that displays the car list, whose content is fetched from the server
 #This also acts as an in-between page to process adding cars to the fleet requests from add_car_form below
 @app.route("/car_list", methods=["GET","POST"])
 def car_list():
+    if session.get('username') is None:
+        return redirect(url_for("index"))
     #When a form sends post request to this route then the code below prep the parameters to send to the server.
     if request.method == "POST":
+        #checks that every field must be filled:
+        if str(request.form.get("CarID")) == "":
+            abort(make_response({'message': 'id must be filled'},400))
+        elif str(request.form.get("EntryDate")) == "":
+            abort(make_response({'message': 'entrydate must be filled'},400))
+        elif str(request.form.get("KmDriven")) == "":
+            abort(make_response({'message': 'kmdriven must be filled'},400))
+        elif str(request.form.get("ReleaseYear")) == "":
+            abort(make_response({'message': 'releaseyear must be filled'},400))
+        elif str(request.form.get("CarCondition")) == "":
+            abort(make_response({'message': 'condition must be filled'},400))
+        elif str(request.form.get("PriceKm")) == "":
+            abort(make_response({'message': 'pricekm must be filled'},400))
+        elif str(request.form.get("CarState")) == "":
+            abort(make_response({'message': 'state must be filled'},400))
+        elif str(request.form.get("Brand")) == "":
+            abort(make_response({'message': 'brand must be filled'},400))
+        elif str(request.form.get("Type")) == "":
+            abort(make_response({'message': 'type must be filled'},400))
+        elif str(request.form.get("PriceDay")) == "":
+            abort(make_response({'message': 'priceday must be filled'},400))
+
         url = "http://localhost:3001/cars"
         date1 = str(request.form.get("EntryDate"))
         date2 = str(request.form.get("ReleaseYear"))
-        date3 = datetime.now().strftime("%Y-%m-%d")
         if int(date1[0:4])<int(date2):
-            return abort(jsonify(message = "The entry year cannot be smaller than the release year."),400)
+            return abort(make_response({'message': "The entry year cannot be smaller than the release year."},400))
         else:
-            params = {'id': str(request.form.get("CarID")),
+            params = {'carid': str(request.form.get("CarID")),
                 'entrydate': str(request.form.get("EntryDate")),
                 'kmdriven': str(request.form.get("KmDriven")),
                 'releaseyear': str(request.form.get("ReleaseYear")),
-                'condition': str(request.form.get("CarCondition")),
+                'condi': str(request.form.get("CarCondition")),
                 'pricekm': str(request.form.get("PriceKm")),
                 "state": str(request.form.get("CarState")),
                 "brand": str(request.form.get("Brand")),
                 "model": "",
-                "type": str(request.form.get("Type")),
+                "style": str(request.form.get("Type")),
                 "priceday": str(request.form.get("PriceDay"))
                 }
             headers = {'content-type': 'application/json'}
@@ -107,7 +174,10 @@ def car_list():
 #This redirects to a add_car_form page where you can fill in the form. upon submission the data is directed to car_list
 @app.route("/add_car_form")
 def add_car_form():
-
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+    elif session.get('position') == "Staff":
+        abort(make_response({'message': 'Not enough authorization'},404))
     today = date.today()
     d1 = today.strftime("%Y-%m-%d")
 
@@ -116,6 +186,8 @@ def add_car_form():
 #This is an route the directs to the confirmation for delete page with all the information of the targeted car
 @app.route("/delete_confirmation", methods=["POST"])
 def delete_confirmation():
+    if session.get('position') == "Staff":
+        abort(make_response({'message': 'Not enough authorization'},404))
     deletecar = {
         'deleteID' : str(request.form.get("DeleteID")),
         'entryDate' : str(request.form.get("DeleteEntrydate")),
@@ -134,6 +206,8 @@ def delete_confirmation():
 #This is an in-between route to process delete requests based on ID.
 @app.route("/delete", methods=["POST"])
 def delete():
+    if session.get('position') == "Staff":
+        abort(make_response({'message': 'Not enough authorization'},404))
     url = 'http://localhost:3001/cars/' + str(request.form.get("DeleteID"))
     delete_r = requests.request('DELETE',url)
     return redirect(url_for("car_list"))
@@ -154,82 +228,134 @@ def edit_car():
         'editState' : str(request.form.get("EditState")),
         'editPriceday' : str(request.form.get("EditPriceday"))
     }
-    today = datetime.date.today()
+    today = date.today()
     d1 = today.strftime("%Y-%m-%d")
-
     return render_template("edit_car.html",today = d1, editcar = editcar, position = session.get('position'))
 
 @app.route("/wrapup_edit",methods=["POST"])
 def wrapup_edit():
+    if str(request.form.get("oldID")) == "" or str(request.form.get("oldID")) is None:
+        abort(make_response({'message': 'Must contain ID'},400))
+
+    if str(request.form.get("oldEntrydate")) == "" or request.form.get("oldEntrydate") is None:
+        abort(make_response({'message': 'Must contain oldEntryDate'},400))
+
+    if str(request.form.get("oldKmdriven")) == "" or request.form.get("oldKmdriven") is None:
+        abort(make_response({'message': 'Must contain oldKmDriven'},400))
+
+    if str(request.form.get("oldReleaseyear")) == "" or request.form.get("oldReleaseyear") is None:
+        abort(make_response({'message': 'Must contain oldReleaseYear'},400))
+
+    if str(request.form.get("oldCondition")) == "" or request.form.get("oldCondition") is None:
+        abort(make_response({'message': 'Must contain oldCarCondition'},400))
+
+    if str(request.form.get("oldPricekm")) == "" or request.form.get("oldPricekm") is None:
+        abort(make_response({'message': 'Must contain oldPriceKm'},400))
+
+    if str(request.form.get("oldPriceday")) == "" or request.form.get("oldPriceday") is None:
+        abort(make_response({'message': 'Must contain oldPriceDay'},400))
+
+    if str(request.form.get("oldBrand")) == "" or request.form.get("oldBrand") is None:
+        abort(make_response({'message': 'Must contain oldBrand'},400))
+
+    if str(request.form.get("oldType")) == "" or request.form.get("oldType") is None:
+        abort(make_response({'message': 'Must contain oldType'},400))
+
+    if str(request.form.get("oldState")) == "" or request.form.get("oldState") is None:
+        abort(make_response({'message': 'Must contain oldState'},400))
+
     PutID = str(request.form.get("oldID"))
 
-    if str(request.form.get("EntryDate")) == "":
+    if str(request.form.get("EntryDate")) == "" or request.form.get("EntryDate") is None:
         PutEntryDate = str(request.form.get("oldEntrydate"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutEntryDate = str(request.form.get("EntryDate"))
 
-    if str(request.form.get("KmDriven")) == "":
+    if str(request.form.get("KmDriven")) == "" or request.form.get("KmDriven") is None:
         PutKmDriven = str(request.form.get("oldKmdriven"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutKmDriven = str(request.form.get("KmDriven"))
 
-    if str(request.form.get("ReleaseYear")) == "":
+    if str(request.form.get("ReleaseYear")) == "" or request.form.get("ReleaseYear") is None:
         PutReleaseYear = str(request.form.get("oldReleaseyear"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutReleaseYear = str(request.form.get("ReleaseYear"))
 
-    if str(request.form.get("CarCondition")) == "":
+    if str(request.form.get("CarCondition")) == "" or request.form.get("CarCondition") is None:
         PutCarCondition = str(request.form.get("oldCondition"))
     else:
         PutCarCondition = str(request.form.get("CarCondition"))
 
-    if str(request.form.get("PriceKm")) == "":
+    if str(request.form.get("PriceKm")) == "" or request.form.get("PriceKm") is None:
         PutPriceKm = str(request.form.get("oldPricekm"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutPriceKm = str(request.form.get("PriceKm"))
 
-    if str(request.form.get("PriceDay")) == "":
+    if str(request.form.get("PriceDay")) == "" or request.form.get("PriceDay") is None:
         PutPriceDay = str(request.form.get("oldPriceday"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutPriceDay = str(request.form.get("PriceDay"))
 
-    if str(request.form.get("Brand")) == "":
+    if str(request.form.get("Brand")) == "" or request.form.get("Brand") is None:
         PutBrand = str(request.form.get("oldBrand"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutBrand = str(request.form.get("Brand"))
 
-    if str(request.form.get("Type")) == "":
+    if str(request.form.get("Type")) == "" or request.form.get("Type") is None:
         PutType = str(request.form.get("oldType"))
     else:
+        if session.get('position') == "Staff":
+            abort(make_response({'message': 'Not enough authorization'},404))
         PutType = str(request.form.get("Type"))
 
-    if str(request.form.get("State")) == "":
+    if str(request.form.get("State")) == "" or request.form.get("State") is None:
         PutState = str(request.form.get("oldState"))
     else:
         PutState = str(request.form.get("State"))
 
-    url = "http://localhost:3001/cars" + "/" + PutID
-    params = {'id': PutID,
-            'entrydate': PutEntryDate,
-            'kmdriven': PutKmDriven,
-            'releaseyear': PutReleaseYear,
-            'condition': PutCarCondition,
-            'pricekm': PutPriceKm,
-            "state": PutState,
-            "brand": PutBrand,
-            "model": "",
-            "type": PutType,
-            "priceday": PutPriceDay
-            }
+    date1 = PutEntryDate
+    date2 = PutReleaseYear
+    if int(date1[0:4])<int(date2):
+        return abort(make_response({'message': "The entry year cannot be smaller than the release year."},400))
+    else:
+        url = "http://localhost:3001/cars" + "/" + PutID
+        params = {'carid': PutID,
+                'entrydate': PutEntryDate,
+                'kmdriven': PutKmDriven,
+                'releaseyear': PutReleaseYear,
+                'condi': PutCarCondition,
+                'pricekm': PutPriceKm,
+                "state": PutState,
+                "brand": PutBrand,
+                "model": "",
+                "style": PutType,
+                "priceday": PutPriceDay
+                }
+        print(params)
+        print(url)
+        headers = {'content-type': 'application/json'}
+        r = requests.request('PUT',url, data = json.dumps(params), headers=headers)
 
-    headers = {'content-type': 'application/json'}
-    r = requests.request('PUT',url, data = json.dumps(params), headers=headers)
-
-    return redirect(url_for("car_list"))
+        return redirect(url_for("car_list"))
 
 #Sprint 2: filter car with a form
 @app.route("/filter_form", methods = ["POST", "GET"])
 def filter_form():
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
         url = "http://localhost:3001/cars"
         r = requests.request("GET",url).json()
@@ -240,128 +366,181 @@ def filter_form():
             if EntryDateMax != "":
                 a = EntryDateMax.split("-")
                 date_a = date(int(a[0]),int(a[1]),int(a[2]))
+                cars_for_removal = []
                 for car in r:
                     c = car['entrydate'].split("-")
                     date_c = date(int(c[0]),int(c[1]),int(c[2]))
                     if date_c>date_a:
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if EntryDateMin != "":
                 b = EntryDateMin.split("-")
                 date_b = date(int(b[0]),int(b[1]),int(b[2]))
+                cars_for_removal = []
                 for car in r:
                     c = car['entrydate'].split("-")
                     date_c = date(int(c[0]),int(c[1]),int(c[2]))
                     if date_c < date_b:
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if EntryDateMin !="" and EntryDateMax !="":
                 if date_a < date_b:
-                    return abort(jsonify(message = "The max entry year cannot be smaller than the min entry year."),400)
-
+                    return abort(make_response({'message': "The max entry year cannot be smaller than the min entry year."},400))
         #Processing Km Driven data
         KmDrivenMax = request.form.get('KmDrivenMax')
         KmDrivenMin = request.form.get('KmDrivenMin')
         if KmDrivenMax != "" or KmDrivenMin != "":
             if KmDrivenMax != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['kmdriven'])
                     if c>int(KmDrivenMax):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if KmDrivenMin != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['kmdriven'])
                     if c<int(KmDrivenMin):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if (KmDrivenMax != "" and KmDrivenMin != "") and (int(KmDrivenMax) < int(KmDrivenMin)):
-                return abort(jsonify(message = "The max km driven cannot be smaller than the min km driven."),400)
+                return abort(make_response({'message': "The max km driven cannot be smaller than the min km driven."},400))
 
         #Processing release year
         ReleaseYearMax = request.form.get('ReleaseYearMax')
         ReleaseYearMin = request.form.get('ReleaseYearMin')
         if ReleaseYearMax != "" or ReleaseYearMin != "":
             if ReleaseYearMax != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['releaseyear'])
                     if c>int(ReleaseYearMax):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if ReleaseYearMin != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['releaseyear'])
                     if c<int(ReleaseYearMin):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if (ReleaseYearMax != "" and ReleaseYearMin != "") and (int(ReleaseYearMax) < int(ReleaseYearMin)):
-                return abort(jsonify(message = "The max release year cannot be smaller than the min release year."),400)
+                return abort(make_response({'message': "The max release year cannot be smaller than the min release year."},400))
 
         #Procesing CarCondition
+        conditions = ["new","slightly used","used","old"]
         CarCondition = request.form.get('CarCondition')
         if CarCondition != "":
+            if CarCondition not in conditions:
+                abort(make_response({'message': "Invalid car condition given"},400))
+            cars_for_removal = []
             for car in r:
-                if car['condition']!=CarCondition:
-                    r.remove(car)
+                if car['condi']!=CarCondition:
+                    cars_for_removal.append(car)
+            for car in cars_for_removal:
+                r.remove(car)
 
         #Processing Car brands
+        brands = ["Toyota","Honda","Mazda","Nissan","Subaru"]
         Brand = request.form.get('Brand')
         if Brand != "":
+            if Brand not in brands:
+                abort(make_response({'message': "Invalid car brand given"},400))
+            cars_for_removal = []
             for car in r:
                 if car['brand']!=Brand:
-                    r.remove(car)
+                    cars_for_removal.append(car)
+            for car in cars_for_removal:
+                r.remove(car)
 
         #Processing Car types
+        types = ["Sedan","SUV","Minivan","Crossover","Wagon"]
         Type = request.form.get('Type')
         if Type != "":
+            if Type not in types:
+                abort(make_response({'message': "Invalid car type given"},400))
+            cars_for_removal = []
             for car in r:
                 if car['type']!=Type:
-                    r.remove(car)
+                    cars_for_removal.append(car)
+            for car in cars_for_removal:
+                r.remove(car)
 
         #Processing Car states
+        states = ["True", "False"]
         CarState = request.form.get('CarState')
         if CarState != "":
+            if CarState not in states:
+                abort(make_response({'message': "Invalid car state given"},400))
+            cars_for_removal = []
             for car in r:
                 if car['state']!=CarState:
-                    r.remove(car)
+                    cars_for_removal.append(car)
+            for car in cars_for_removal:
+                r.remove(car)
 
         #Processing price per km
         PriceKmMin = request.form.get('PriceKmMin')
         PriceKmMax = request.form.get('PriceKmMax')
         if PriceKmMax != "" or PriceKmMin != "":
             if PriceKmMax != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['pricekm'])
                     if c>int(PriceKmMax):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if PriceKmMin != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['pricekm'])
                     if c<int(PriceKmMin):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if (PriceKmMax != "" and PriceKmMin != "") and (int(PriceKmMax) < int(PriceKmMin)):
-                return abort(jsonify(message = "The max price per km cannot be smaller than the min price per km."),400)
+                return abort(make_response({'message': "The max price per km cannot be smaller than the min price per km."},400))
 
         #Processing price per day
         PriceDayMax = request.form.get('PriceDayMax')
         PriceDayMin = request.form.get('PriceDayMin')
         if PriceDayMax != "" or PriceDayMin != "":
             if PriceDayMax != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['priceday'])
                     if c>int(PriceDayMax):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if PriceDayMin != "":
+                cars_for_removal = []
                 for car in r:
                     c = int(car['priceday'])
                     if c<int(PriceDayMin):
-                        r.remove(car)
+                        cars_for_removal.append(car)
+                for car in cars_for_removal:
+                    r.remove(car)
             if (PriceDayMax != "" and PriceDayMin != "") and (int(PriceDayMax) < int(PriceDayMin)):
-                return abort(jsonify(message = "The max price per day cannot be smaller than the min price per day."),400)
+                return abort(make_response({'message': "The max price per day cannot be smaller than the min price per day."},400))
 
         filtered_response = r
-        print(filtered_response)
+
         return render_template("car_list.html", responses = filtered_response, username = session.get('username'), position = session.get('position'))
 
     elif request.method == "GET":
+
         today = date.today()
         d1 = today.strftime("%Y-%m-%d")
         return render_template("filter_form.html",today=d1)
-
 
 if __name__ == '__main__':
     app.run(port=5001)

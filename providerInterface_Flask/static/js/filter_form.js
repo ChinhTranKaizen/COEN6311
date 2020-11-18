@@ -37,12 +37,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     let ReleaseYearMin = document.querySelector("#ReleaseYearMin");
     let ReleaseYearMax = document.querySelector("#ReleaseYearMax");
-    let elementType = "release year";
 
     ReleaseYearMin.onblur = function (){
       if (ReleaseYearMax.value !== "" && ReleaseYearMin.value !== ""){
         if (ReleaseYearMax.value < ReleaseYearMin.value) {
-          alert("Maximum "+elementType+" cannot be smaller than minimum " +elementType+" for filter");
+          alert("Maximum release year cannot be smaller than minimum release year for filter");
           ReleaseYearMax.value = "";
           ReleaseYearMin.value = "";
         }
@@ -51,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function(){
     ReleaseYearMax.onblur = function (){
       if (ReleaseYearMax.value !== "" && ReleaseYearMin.value !== ""){
         if (ReleaseYearMax.value < ReleaseYearMin.value) {
-          alert("Maximum "+elementType+" cannot be smaller than minimum " +elementType+" for filter");
+          alert("Maximum release year cannot be smaller than minimum release year for filter");
           ReleaseYearMax.value = "";
           ReleaseYearMin.value = "";
         }
@@ -60,12 +59,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     let PriceKmMin = document.querySelector("#PriceKmMin");
     let PriceKmMax = document.querySelector("#PriceKmMax");
-    elementType = "price per km";
 
     PriceKmMin.onblur = function (){
       if (PriceKmMax.value !== "" && PriceKmMin.value !== ""){
         if (PriceKmMax.value < PriceKmMin.value) {
-          alert("Maximum "+elementType+" cannot be smaller than minimum " +elementType+" for filter");
+          alert("Maximum price per km cannot be smaller than minimum price per km for filter");
           PriceKmMax.value = "";
           PriceKmMin.value = "";
         }
@@ -74,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function(){
     PriceKmMax.onblur = function (){
       if (PriceKmMax.value !== "" && PriceKmMin.value !== ""){
         if (PriceKmMax.value < PriceKmMin.value) {
-          alert("Maximum "+elementType+" cannot be smaller than minimum " +elementType+" for filter");
+          alert("Maximum price per km cannot be smaller than minimum price per km for filter");
           PriceKmMax.value = "";
           PriceKmMin.value = "";
         }
@@ -83,12 +81,11 @@ document.addEventListener("DOMContentLoaded", function(){
 
     let PriceDayMin = document.querySelector("#PriceDayMin");
     let PriceDayMax = document.querySelector("#PriceDayMax");
-    elementType = "price per day";
 
     PriceDayMin.onblur = function (){
       if (PriceDayMax.value !== "" && PriceDayMin.value !== ""){
         if (PriceDayMax.value < PriceDayMin.value) {
-          alert("Maximum "+elementType+" cannot be smaller than minimum " +elementType+" for filter");
+          alert("Maximum price per day cannot be smaller than minimum price per day for filter");
           PriceDayMax.value = "";
           PriceDayMin.value = "";
         }
@@ -97,7 +94,7 @@ document.addEventListener("DOMContentLoaded", function(){
     PriceDayMax.onblur = function (){
       if (PriceDayMax.value !== "" && PriceDayMin.value !== ""){
         if (PriceDayMax.value < PriceDayMin.value) {
-          alert("Maximum "+elementType+" cannot be smaller than minimum " +elementType+" for filter");
+          alert("Maximum price per day cannot be smaller than minimum price per day for filter");
           PriceDayMax.value = "";
           PriceDayMin.value = "";
         }
@@ -127,9 +124,4 @@ document.addEventListener("DOMContentLoaded", function(){
         EntryDateMin.value = "";
       };
     };
-  }
-
-  function checkIntegerValues(elementMAX, elementMIN, elementType){
-
-
   }

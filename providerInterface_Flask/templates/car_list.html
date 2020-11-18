@@ -11,19 +11,17 @@
     <!-- Sprint 2: Filter form for cars -->
     <!-- Check if responses is an empty string -->
     <h1>Hello {{username}}. You are currently log in as {{position}}. <a href="{{url_for('logout')}}">Log out</a></h1>
-    {% if responses|length >= 1 %}
     <a href="{{ url_for('filter_form') }}" > <button>Filter cars</button> </a>
-    <a href="{{ url_for('car_list') }}" > <button>Remove filter</button> </a>
-    {% endif %}
+    <a href="{{ url_for('car_list') }}" > <button>Refresh car list</button> </a> <br> <br>
     <!-- Sprint 2: End of filter form -->
     {% for response in responses %}
-    {% set carID = response["id"] %}
+    {% set carID = response["carid"] %}
     {% set entryDate = response["entrydate"] %}
     {% set kmDriven = response["kmdriven"] %}
     {% set releaseYear = response["releaseyear"] %}
-    {% set condition = response["condition"] %}
+    {% set condition = response["condi"] %}
     {% set brand = response["brand"] %}
-    {% set type = response["type"] %}
+    {% set type = response["style"] %}
     {% set state = response["state"] %}
     {% set priceday = response["priceday"] %}
     {% set priceKm = response["pricekm"] %}

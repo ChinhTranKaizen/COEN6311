@@ -31,7 +31,8 @@ button:hover {
 }
 
 .container {
-    padding: 16px;
     width: 400px;
+    padding: 16px;
+    background-color: white;
     margin: auto;
 }
