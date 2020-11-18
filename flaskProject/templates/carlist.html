@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/car.css')}}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/car_list.js')}}"></script>
+    <title>Document</title>
+</head>
+<body>
+{#    {% if responses|length >= 1 %}#}
+{#    <a href="{{ url_for('filter_form') }}" > <button>Filter cars</button> </a>#}
+{#    <a href="{{ url_for('car_list') }}" > <button>Remove filter</button> </a>#}
+{#    {% endif %}#}
+<h2>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h2><br>
+<a href="{{ url_for('search') }}" > <button>Filter cars</button> </a>
+<h2>Here is the cars you like. Please choose one to rent.</h2>
+    {% for response in responses %}
+    {% set kmDriven = response["kmdriven"] %}
+    {% set releaseYear = response["releaseyear"] %}
+    {% set condition = response["condi"] %}
+    {% set brand = response["brand"] %}
+    {% set model = response["model"] %}
+    {% set style = response["style"] %}
+    {% set priceday = response["priceday"] %}
+
+    <ul>
+        <li>
+            Brand: {{brand}} -
+            Car model : {{model}} -
+            Type: {{style}} -
+            Km driven: {{kmDriven}} -
+            Release year: {{releaseYear}} -
+            Condition: {{condition}} -
+            Price/day: {{priceday}}
+           <a href="{{ url_for('confirm_order') }}" > <button>Select</button> </a><br>
+        </li>
+    </ul>
+    {% endfor %}
+</html>

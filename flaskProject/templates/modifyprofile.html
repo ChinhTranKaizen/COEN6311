@@ -5,26 +5,55 @@
     <title>Title</title>
 </head>
 <body>
-<h2><p>hello  {{ loginuser }}</p><br></h2>>
-<p>Your information is:</p><br>
-username,password,firstname,lastname,e-mail,phone,address,postal<br>
-{{ row }}<br>
-<p>Please modify your profile:</p>>
+<h2><p>hello  {{ loginuser }}</p><br></h2>><a href="{{url_for('logout')}}">Log out</a></h2><br>
+    {% set customerid = customer["customerid"] %}
+    {% set username = customer["username"] %}
+    {% set password = customer["password"] %}
+    {% set firstname = customer["firstname"] %}
+    {% set lastname = customer["lastname"] %}
+    {% set phone = customer["phone"] %}
+    {% set email = customer["email"] %}
+    {% set country = customer["country"] %}
+    {% set city = customer["city"] %}
+    {% set province = customer["province"] %}
+    {% set postal = customer["postal"] %}
+
+
+<p>Please modify your profile:</p><br>
 <form method="post" action="/modifyprofile">
-    <label>Password：<input type="password" name="password" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-    <label>Firstname：<input type="text" name="firstname" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-    <label>Lastname：<input type="text" name="lastname" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-    <label>E-mail：<input type="text" name="email" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-    <label>Phone：<input type="text" name="phone" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-    <label>Address：<input type="text" name="address" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-    <label>postal：<input type="text" name="postal" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
+
+    <input type="hidden" name="customerid" value={{customerid}}><br>
+
+    <label>Username: {{username}} - You can not change your username</label>
+           <input type="hidden" name="username" value={{username}}><br>
+
+    <label>Password: {{password}} - New password: </label>
+            <input type="password" name="password" value="" required minlength="6" maxlength="30" size="20"><br><br>
+
+    <label>firstname: {{firstname}} - New firstname: </label>
+            <input type="text" name="firstname" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>lastname: {{lastname}} - New lastname: </label>
+            <input type="text" name="lastname" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>phone: {{phone}} - New Phone: </label>
+            <input type="text" name="phone" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>email: {{email}} - New E-mail: </label>
+            <input type="text" name="email" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>country: {{country}} - New country: </label>
+            <input type="text" name="country" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>city: {{city}} - New city: </label>
+            <input type="text" name="city" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>city: {{province}} - New province: </label>
+            <input type="text" name="province" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
+    <label>postal: {{postal}} - New province: </label>
+            <input type="text" name="postal" value="" required minlength="1" maxlength="30" size="20"><br><br>
+
     <input type="submit" value="Modify">
 </form>
 

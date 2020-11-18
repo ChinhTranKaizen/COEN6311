@@ -2,9 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter_form</title>
+    <script src="{{ url_for('static', filename='js/filter_form.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/car.css')}}">
 </head>
 <body>
-<p>car</p>>
+    <h2>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h2><br>
+    <h2>Filter the car which you want to rent:</h2>
+    <form action="{{url_for('filter_form')}}" method="POST">
+        <label for="">Km driven: </label>
+            <ul>
+                <li><label for="">Upper limit:</label><input type="number" id="KmDrivenMax" name="KmDrivenMax" min="0" max = "300000"> </li>
+                <li><label for="">Lower limit:</label><input type="number" id="KmDrivenMin" name="KmDrivenMin" min="0" max = "300000"> </li>
+            </ul><br><br>
+
+        <label for="CarCondition">Condition: </label>
+        <select name="CarCondition">
+            <option value="">None</option>
+            <option value="used">Used</option>
+            <option value="good">Good</option>
+            <option value="very good">Very Good</option>
+        </select> <br><br>
+
+        <label for="Brand">Brand: </label>
+        <select name="Brand">
+            <option value="">None</option>
+            <option value="Ford">Ford</option>
+            <option value="Renault">Renault</option>
+            <option value="BMW">BMW</option>
+            <option value="Peugeot">Peugeot</option>
+            <option value="Citroen">Citroen</option>
+        </select> <br><br>
+
+        <label for="Style">Style:</label> <br>
+            <select name="Style">
+                <option value="">None</option>
+                <option value="fullsize">Fullsize</option>
+                <option value="standard">Standard</option>
+                <option value="standardsuv">Standardsuv</option>
+                <option value="premiumsuv">Premiumsuv</option>
+                <option value="minivan">Minivan</option>
+        </select> <br><br>
+
+        <label for="">Price per Day: </label>
+        <ul>
+            <li><label for="">Upper limit:</label><input type="number" id="PriceDayMax" name="PriceDayMax" min="0" max = "100"></li>
+            <li><label for="">Lower limit:</label><input type="number" id="PriceDayMin"name="PriceDayMin" min="0" max = "100"></li>
+        </ul>
+        <input type="submit" value="Filter">
+    </form>
+
 </body>
 </html>
