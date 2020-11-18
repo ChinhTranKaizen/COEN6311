@@ -88,7 +88,9 @@ def logout():
 
 @app.route('/manage_accounts',methods = ["GET", "POST"])
 def manage_accounts():
-    if session.get('position') == "Staff" or session.get('position') == "Finance":
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+    elif session.get('position') == "Staff" or session.get('position') == "Finance":
         abort(make_response({'message': 'Not enough authorization'},404))
     url = "http://localhost:3001/employees"
     r = requests.request("GET",url).json()
@@ -116,6 +118,8 @@ def manage_accounts():
 #This also acts as an in-between page to process adding cars to the fleet requests from add_car_form below
 @app.route("/car_list", methods=["GET","POST"])
 def car_list():
+    if session.get('username') is None:
+        return redirect(url_for("index"))
     #When a form sends post request to this route then the code below prep the parameters to send to the server.
     if request.method == "POST":
         #checks that every field must be filled:
@@ -170,7 +174,9 @@ def car_list():
 #This redirects to a add_car_form page where you can fill in the form. upon submission the data is directed to car_list
 @app.route("/add_car_form")
 def add_car_form():
-    if session.get('position') == "Staff":
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+    elif session.get('position') == "Staff":
         abort(make_response({'message': 'Not enough authorization'},404))
     today = date.today()
     d1 = today.strftime("%Y-%m-%d")
@@ -347,6 +353,9 @@ def wrapup_edit():
 #Sprint 2: filter car with a form
 @app.route("/filter_form", methods = ["POST", "GET"])
 def filter_form():
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+
     if request.method == "POST":
         url = "http://localhost:3001/cars"
         r = requests.request("GET",url).json()
@@ -528,6 +537,7 @@ def filter_form():
         return render_template("car_list.html", responses = filtered_response, username = session.get('username'), position = session.get('position'))
 
     elif request.method == "GET":
+
         today = date.today()
         d1 = today.strftime("%Y-%m-%d")
         return render_template("filter_form.html",today=d1)
