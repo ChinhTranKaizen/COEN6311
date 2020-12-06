@@ -7,34 +7,25 @@
     <title>Title</title>
 </head>
 <body>
-<div>
-    <h1>Welcome to car rental system!</h1>
-</div>
- <div class="form-wrapper">
-        <div class="header">
-            Login
-        </div>
+
+<h1>Welcome to car rental system!</h1>
 
      <form method="post" action="/loginprocess">
-        <div class="input-wrapper">
+        <div class="container">
+        <label for="username"><b>Username:</b></label>
+        <input type="text" name="username">
 
-            <div class="border-wrapper">
-                <input type="text" name="username" class="border-item" placeholder="username">
+        <label for="password"><b>Password:</b></label>
+        <input type="password" name="password">
 
-            </div>
-            <div class="border-wrapper">
-                <input type="password" name="password" class="border-item" placeholder="password">
-            </div>
-
-        </div>
-        <div class="action">
-            <button type="submit">Login</button>
+        <button type="submit" value="Log in">Log in</button>
         </div>
      </form>
-        <div class="action">
-            <h3><p>Don't have account?<br></p></h3>
-            <div class="btn"><a href="/register ">Register</a></div>
-        </div>
+
+
+    <div class="container">
+        <label><b>Don't have account?</b></label>
+        <a href="/register"> <button>Register here!</button></a>
     </div>
 
 

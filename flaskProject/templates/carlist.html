@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static',filename='css/car.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/carlist.css')}}">
     <script type="text/javascript" src="{{ url_for('static', filename='js/car_list.js')}}"></script>
     <title>Document</title>
 </head>
 <body>
-{#    {% if responses|length >= 1 %}#}
-{#    <a href="{{ url_for('filter_form') }}" > <button>Filter cars</button> </a>#}
-{#    <a href="{{ url_for('car_list') }}" > <button>Remove filter</button> </a>#}
-{#    {% endif %}#}
-<h2>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h2><br>
-<a href="{{ url_for('search') }}" > <button>Filter cars</button> </a>
-<h2>Here is the cars you like. Please choose one to rent.</h2>
-    {% for response in responses %}
+
+<h2><a href="loginprocess">Back to index</a> </h2><br>
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1><br>
+
+<div class="func_div">
+    <a href="{{ url_for('search')}}" > <button class="func_btn">Filter cars</button></a>
+</div>
+{% for response in responses %}
+    {% set carID = response["carid"] %}
     {% set kmDriven = response["kmdriven"] %}
     {% set releaseYear = response["releaseyear"] %}
     {% set condition = response["condi"] %}
@@ -24,18 +25,74 @@
     {% set model = response["model"] %}
     {% set style = response["style"] %}
     {% set priceday = response["priceday"] %}
+    <div class="item_container">
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <td>{{carID}}</td>
+                    <th>Brand</th>
+                    <td>{{brand}}</td>
+                    <!-- Edit button -->
+                    <td rowspan="5" id="btn">
+                        <form id="confirm_order" action="{{ url_for('confirm_order') }}" method="post">
+                            <input type="hidden" name="carID" value={{carID}}>
+                            <input type="hidden" name="priceday" value={{priceday}}>
+                            <input type="hidden" name="customerid" value={{customerid}}>
+                            <button class="btn">Select</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Car type</th>
+                    <td>{{style}}</td>
+                    <th>Condition</th>
+                    <td>{{condition}}</td>
+                </tr>
+                <tr>
+                    <th>Release year</th>
+                    <td>{{releaseYear}}</td>
+                    <th>Km driven</th>
+                    <td>{{kmDriven}}</td>
+                </tr>
+                <tr>
+                    <th>Price per day</th>
+                    <td>{{priceday}}</td>
+                </tr>
+            </table>
+    </div>
+ {% endfor %}
 
-    <ul>
-        <li>
-            Brand: {{brand}} -
-            Car model : {{model}} -
-            Type: {{style}} -
-            Km driven: {{kmDriven}} -
-            Release year: {{releaseYear}} -
-            Condition: {{condition}} -
-            Price/day: {{priceday}}
-           <a href="{{ url_for('confirm_order') }}" > <button>Select</button> </a><br>
-        </li>
-    </ul>
-    {% endfor %}
+
+
+<!--<a href="{{ url_for('search') }}" > <button>Filter cars</button> </a>-->
+<!--<h2>Here is the cars you like. Please choose one to rent.</h2>-->
+<!--    {% for response in responses %}-->
+<!--    {% set carID = response["carid"] %}-->
+<!--    {% set kmDriven = response["kmdriven"] %}-->
+<!--    {% set releaseYear = response["releaseyear"] %}-->
+<!--    {% set condition = response["condi"] %}-->
+<!--    {% set brand = response["brand"] %}-->
+<!--    {% set model = response["model"] %}-->
+<!--    {% set style = response["style"] %}-->
+<!--    {% set priceday = response["priceday"] %}-->
+
+<!--    <ul>-->
+<!--        <li>-->
+<!--            Car ID: {{carID}}- -->
+<!--            Brand: {{brand}} - -->
+<!--            Car model : {{model}} - -->
+<!--            Type: {{style}} - -->
+<!--            Km driven: {{kmDriven}} - -->
+<!--            Release year: {{releaseYear}} - -->
+<!--            Condition: {{condition}} - -->
+<!--            Price/day: {{priceday}}-->
+<!--            <form id="confirm_order" action="{{ url_for('confirm_order') }}" method="post">-->
+<!--                            <input type="hidden" name="carID" value={{carID}}>-->
+<!--                            <input type="hidden" name="priceday" value={{priceday}}>-->
+<!--                            <input type="hidden" name="customerid" value={{customerid}}>-->
+<!--                            <button class="btn">Select Car</button>-->
+<!--            </form>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--    {% endfor %}-->
 </html>

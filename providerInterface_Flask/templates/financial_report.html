@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/financial_report.css')}}">
+    <title>Financial reports</title>
+</head>
+<body>
+    <a href="{{url_for('index')}}">Back to index</a> <br><br>
+    <h1>Submitted financial reports</h1>
+    {% if reports|length == 0 %}
+    <h2>There are no reports to display</h2>
+    {% else %}
+    {% for report in reports %}
+    <div class='item_container'>
+        <table>
+            <tr>
+                <th>Report date</th>
+                <td>{{report['reportdate']}}</td>
+            </tr>
+            <tr>
+                <th>Report duration</th>
+                <td>{{report['durationreported']}}</td>
+            </tr>
+            <tr>
+                <th>Revenue</th>
+                <td>{{report['revenue']}}</td>
+            </tr>
+        </table>
+    </div>
+    {% endfor %}
+    {% endif %}
+</body>
+</html>

@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/add_car_form.css')}}">
     <script src="{{ url_for('static', filename='js/add_car_form.js') }}"></script>
     <title>Add car form</title>
 </head>
 <body>
-    <div>
+    <a href="{{url_for('car_list')}}">Back to car list</a> <br><br>
+    <h1>Add new car to fleet</h1>
+    <div class="item_container">
         <form action="{{ url_for('car_list')}}" method="post">
             <!-- Input for car ID -->
             <input type="hidden" name="CarID" min="0" value = "0">
@@ -54,7 +57,7 @@
             <!-- Input for car price per km -->
             <label for="PriceKm">Price per km:</label> <br>
             <input type="number" name="PriceKm" min="0" max = "100" required> <br><br>
-            <input type="submit" value="Add car"> <br>
+            <button id="submit_btn">Add car</button>
         </form>
     </div>
 </body>

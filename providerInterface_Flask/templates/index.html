@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/index.css')}}">
+    <title>Index</title>
 </head>
 <body>
-    <h1>Hello {{username}}. You are currently log in as {{position}}</h1>
-    <a href="{{url_for('logout')}}">Log out</a>
-    <a href="{{url_for('car_list')}}">Car list...</a>
+    <h1>Hello {{username}}! You are currently logged in as {{position}}. <a href="{{url_for('logout')}}">Log out</a></h1>
+    <div class="btn_container">
+        <div class="btn">
+            <a href="{{url_for('car_list')}}"><button>Car list</button></a> <br>
+        </div>
     {% if position == "Manager" %}
-    <a href="{{url_for('manage_accounts')}}">Manage employee accounts</a>
+        <div class="btn">
+            <a href="{{url_for('manage_accounts')}}"><button>Manage employee accounts</button></a> <br>
+        </div>
+
+        <!-- add view report -->
+        <div class="btn">
+            <a href="{{url_for('financial_report')}}"><button>View financial reports</button></a> <br>
+        </div>
     {% endif %}
+
+    {% if position == "Finance" %}
+        <!-- Generate financial report: output is revenue -->
+        <div class="btn">
+            <a href="{{url_for('generate_financial_report')}}"><button>Generate financial reports</button></a> <br>
+        </div>
+    {% endif %}
+    </div>
 </body>
 </html>

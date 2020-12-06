@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="{{url_for('static',filename='css/loginprocess.css')}}">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1>
+<h1>The end date must be later than start date!</h1>
+
+<div class="btn_container">
+        <div class="btn">
+            <a href="{{url_for('search')}}"><button>Back to Search Car</button></a> <br>
+        </div>
+
+</body>
+</html>

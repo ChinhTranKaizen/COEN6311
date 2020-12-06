@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link rel="stylesheet" href="{{url_for('static',filename='css/loginprocess.css')}}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Modify Success</title>
 </head>
 <body>
-<h2>Modify Succeed!</h2>
-<div class="action">
-    <div class="btn"><a href="/search ">Start to rent a car<br></a></div><br>
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1>
+<h1>Modify Succeed!</h1>
+<div class="btn_container">
+        <div class="btn">
+            <a href="loginprocess"><button>Back to index</button></a> <br>
+        </div>
 </div>
 </body>
 </html>

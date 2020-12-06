@@ -7,34 +7,56 @@
     <title>Register</title>
 </head>
 <body>
-<div class="form-wrapper">
-        <div class="header">
-            Register
-        </div>
 
-        <form method="post" action="/addcustomer">
-            <label>Username：<input type="text" name="username" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>Password：<input type="password" name="password" value="" required
-       minlength="6" maxlength="30" size="20"></label><br>
-            <label>Firstname：<input type="text" name="firstname" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>Lastname：<input type="text" name="lastname" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>Phone：<input type="number" name="phone" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>E-mail：<input type="text" name="email" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>Country：<input type="text" name="country" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>City：<input type="text" name="city" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>Province：<input type="text" name="province" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <label>postal：<input type="text" name="postal" value="" required
-       minlength="1" maxlength="30" size="20"></label><br>
-            <input type="submit" value="Register">
-        </form>
+<h1>Register</h1>
+   <div class="container">
+
+    <form action="{{url_for('registerprocess')}}" method="post">
+
+        <input type="hidden" value="0" name ="id">
+
+        <label for="username"><b>Username:</b></label><br>
+        <input type="text" required name="username" minlength="3"> <br><br>
+
+        <label for="password"><b>Password:</b></label><br>
+        <input type="password" required name="password" minlength="8"> <br><br>
+
+        <label for="firstname"><b>Firstname:</b></label> <br>
+        <input type="text" required name="firstname" minlength="3"> <br><br>
+
+        <label for="lastname"><b>Lastname:</b></label> <br>
+        <input type="text" required name="lastname" minlength="3"> <br><br>
+
+        <label for="phone"><b>Phone:</b></label> <br>
+        <input type="text" required name="phone" minlength="5"> <br> <br>
+
+        <label for="email"><b>Email:</b></label> <br>
+        <input type="email"  required name="email"> <br> <br>
+
+        <label for="country"><b>Country:</b></label> <br>
+        <input type="text" required name="country" minlength="1"> <br><br>
+
+        <label for="city"><b>City:</b></label> <br>
+        <input type="text" required name="city" minlength="1"> <br><br>
+
+        <label for="province"><b>City:</b></label> <br>
+        <input type="text" required name="province" minlength="1"> <br><br>
+
+        <label for="postal"><b>Postal:</b></label> <br>
+        <input type="text" required name="postal" minlength="1"> <br><br>
+
+        <input type="hidden" value="true" name ="activation">
+
+        <button type="submit" class="registerbtn" value="Register">Register</button>
+
+    </div>
+    </form>
+
+    <div class="container">
+        <label><b>Already have an account?</b></label>
+        <a href="{{ url_for('index') }}"> <button class="registerbtn">Sign in here!</button></a>
+    </div>
+
 
 </body>
 </html>

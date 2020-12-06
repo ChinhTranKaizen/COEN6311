@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+//use REST API to map the HTTP requests
 @RestController
 public class EmployeeController
 {
@@ -19,37 +19,37 @@ public class EmployeeController
 	private EmployeeService employeeService;
 	
 	
-	
+	// return all the employees to localhost:3001/employees
 	@GetMapping(value="/employees")
 	public Iterable<Employee> getAllEmployees()  
 	{
 		return employeeService.getAllEmployees();
 	}
-	
-	@GetMapping(value="/employees/{id}")
-	public Optional<Employee> getEmployee(@PathVariable Integer id)
+	//return an employee using its id to localhost:3001/employees/employeeid
+	@GetMapping(value="/employees/{employeeid}")
+	public Optional<Employee> getEmployee(@PathVariable Integer employeeid)
 	{
-		return employeeService.getEmployee(id);
+		return employeeService.getEmployee(employeeid);
 	}
 	
-	
+	// receive an employee from localhost:3001/employees
 	@PostMapping(value="/employees")
 	public void addEmployee(@RequestBody Employee employee)
 	{
 		employeeService.addEmployee(employee);
 	}
-	
-    @PutMapping(value="/employees/{id}")
-	public void updateEmployee(@RequestBody Employee employee, @PathVariable Integer id )
+	// update an employee using its id to localhost:3001/employees/employeeid
+    @PutMapping(value="/employees/{employeeid}")
+	public void updateEmployee(@RequestBody Employee employee, @PathVariable Integer employeeid )
 	{
-		employeeService.updateEmployee(id, employee);
+		 employeeService.updateEmployee(employeeid, employee);
 	}
 	
-
-    @DeleteMapping(value="/employees/{id}")
-    public void deleteEmployee(@PathVariable Integer id)
+  //delete an employee using its id to localhost:3001/employees/employeeid
+    @DeleteMapping(value="/employees/{employeeid}")
+    public void deleteEmployee(@PathVariable Integer employeeid)
 	{
-		employeeService.deleteEmployee(id);
+		employeeService.deleteEmployee(employeeid);
 	}
 	
 

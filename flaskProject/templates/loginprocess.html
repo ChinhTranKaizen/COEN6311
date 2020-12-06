@@ -1,22 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link rel="stylesheet" href="{{url_for('static',filename='css/login.css')}}">
+<link rel="stylesheet" href="{{url_for('static',filename='css/loginprocess.css')}}">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<h1>
-    <h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1>
-</h1>>
- <div class="form-wrapper">
-<div class="action">
-    <div class="btn"><a href="/userprofile ">Modify my Profile</a></div>
-</div><br>
-<div class="action">
-    <div class="btn"><a href="/search ">Start to rent a car<br></a></div><br>
-</div>
+
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1>
+
+<div class="btn_container">
+        <div class="btn">
+            <a href="{{url_for('userprofile')}}"><button>Modify my Profile</button></a> <br>
+        </div>
+
+        <div class="btn">
+            <a href="{{url_for('search')}}"><button>Start to rent a car</button></a> <br>
+        </div>
+
+        <div class="btn">
+            <a href="{{url_for('check_order')}}"><button>Order History</button></a> <br>
+        </div>
+
+
 </div>
 </body>
 </html>

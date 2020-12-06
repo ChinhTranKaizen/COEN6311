@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
+//use REST API to map the HTTP requests
 @RestController
 public class CustomerController
 {
@@ -19,37 +19,37 @@ public class CustomerController
 	private CustomerService customerService;
 	
 	
-	
+	// return all the customers to localhost:3001/customers
 	@GetMapping(value="/customers")
 	public Iterable<Customer> getAllCustomers()  
 	{
 		return customerService.getAllCustomers();
 	}
-	
-	@GetMapping(value="/customers/{id}")
-	public Optional<Customer> getCustomer(@PathVariable Integer id)
+	//return a customer using its id to localhost:3001/customers/customerid
+	@GetMapping(value="/customers/{customerid}")
+	public Optional<Customer> getCustomer(@PathVariable Integer customerid)
 	{
-		return customerService.getCustomer(id);
+		return customerService.getCustomer(customerid);
 	}
 	
-	
+	// receive a customer from localhost:3001/customers
 	@PostMapping(value="/customers")
 	public void addCustomer(@RequestBody Customer customer)
 	{
 		customerService.addCustomer(customer);
 	}
-	
-    @PutMapping(value="/customers/{id}")
-	public void updateCustomer(@RequestBody Customer customer, @PathVariable Integer id )
+	// update a customer using its id to localhost:3001/customers/customerid
+    @PutMapping(value="/customers/{customerid}")
+	public void updateCustomer(@RequestBody Customer customer, @PathVariable Integer customerid )
 	{
-    	customerService.updateCustomer(id, customer);
+    	customerService.updateCustomer(customerid, customer);
 	}
 	
-
-    @DeleteMapping(value="/customers/{id}")
-    public void deleteCustomer(@PathVariable Integer id)
+  //delete a customer using its id to localhost:3001/customers/customerid
+    @DeleteMapping(value="/customers/{customerid}")
+    public void deleteCustomer(@PathVariable Integer customerid)
 	{
-    	customerService.deleteCustomer(id);
+    	customerService.deleteCustomer(customerid);
 	}
 	
 

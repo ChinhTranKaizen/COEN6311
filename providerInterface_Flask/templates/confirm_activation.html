@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename= 'css/confirm_accounts.css')}}">
+    <title>Confirm activation</title>
+</head>
+<body>
+    <a href="{{url_for('manage_accounts')}}">Back to employee list</a> <br><br>
+    <h1>Confirm activation for:</h1>
+    <div class="item_container">
+        <form action="{{url_for('manage_accounts')}}" method="POST">
+            {%set employeeID = employee_confirm['employeeid']%}
+            <input type="hidden" name="id" value="{{employeeID}}">
+            <table>
+                <tr>
+                    <th>Employee ID:</th>
+                    <td>{{employee_confirm['employeeid']}}</td>
+                </tr>
+                <tr>
+                    <th>Employee name:</th>
+                    <td>{{employee_confirm['name']}}</td>
+                </tr>
+                <tr>
+                    <th>Employee position:</th>
+                    <td>{{employee_confirm['position']}}</td>
+                </tr>
+                <tr>
+                    <th>Employee email:</th>
+                    <td>{{employee_confirm['email']}}</td>
+                </tr>
+            </table>
+            <button>Confirm activation</button>
+        </form>
+    </div>
+</body>
+</html>

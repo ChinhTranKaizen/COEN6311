@@ -2,11 +2,86 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/confirm_order.css')}}">
+    <title>Confirm_order</title>
 </head>
 <body>
-<h2>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h2><br>
-Please choose the date to start rent the car
+
+<a href="{{url_for('search')}}">Back to filter cars</a> <br><br>
+
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1><br>
+
+
+<h3>Please check the car information</h3><br>
+
+    {% set carID = carinfo["carid"] %}
+    {% set kmDriven = carinfo["kmdriven"] %}
+    {% set releaseYear = carinfo["releaseYear"] %}
+    {% set condition = carinfo["condition"] %}
+    {% set brand = carinfo["brand"] %}
+    {% set style = carinfo["type"] %}
+    {% set priceday = carinfo["priceday"] %}
+    {% set customerid = carinfo["customerid"] %}
+
+<div class="item_container">
+    <table>
+        <tr>
+            <th>CarID:</th>
+            <td>{{carID}}</td>
+        </tr>
+        <tr>
+            <th>Brand:</th>
+            <td>{{brand}}</td>
+        </tr>
+        <tr>
+            <th>Car type:</th>
+            <td>{{style}}</td>
+        </tr>
+        <tr>
+            <th>Km Driven:</th>
+            <td>{{kmDriven}}</td>
+        </tr>
+        <tr>
+            <th>Release Year:</th>
+            <td>{{releaseYear}}</td>
+        </tr>
+        <tr>
+            <th>Condition:</th>
+            <td>{{condition}}</td>
+        </tr>
+        <tr>
+            <th>Price per day:</th>
+            <td>{{priceday}}</td>
+        </tr>
+    </table>
+
+<h3>Please choose the date to start rent the car</h3>
+<!--<h3> The car information is:</h3><br>-->
+<!--<label>Car ID: {{carID}} </label><br>-->
+<!--<label>Brand: {{brand}} </label><br>-->
+<!--<label>Type: {{style}} </label><br>-->
+<!--<label>Km Driven: {{kmDriven}} </label><br>-->
+<!--<label>Release year: {{releaseYear}} </label><br>-->
+<!--<label>Condition: {{condition}} </label><br>-->
+<!--<label>Price/day: {{priceday}} </label><br>-->
+
+
+    <form id="bill_confirm" action="{{ url_for('bill_confirm') }}" method="post">
+        <input type="hidden" name="carID" value={{carID}}>
+        <input type="hidden" name="priceday" value={{priceday}}>
+
+        <label for="Startdate">Start Date:</label> <br>
+            <input type="date" name="startdate" id="startdate" min="{{today}}" required> <br><br>
+        <label for="Enddate">End Date:</label> <br>
+            <input type="date" name="enddate" id="enddate" min="{{today}}" required> <br><br>
+        <label for="Cardinfo">cardnumber:</label> <br>
+            <input type="text" name="cardinfo" id="cardinfo" required minlength="16"> <br><br>
+
+        <button>Confirm</button>
+    </form>
+    <a href="{{url_for('search')}}"><button id="cancel_btn">Cancel</button></a>
+</div>
 
 </body>
 </html>

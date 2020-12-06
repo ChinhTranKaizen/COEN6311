@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+body {
+    font-family: 'Roboto Mono', monospace;
+}
+
+h3 {
+    text-align: center;
+}
+
+.item_container {
+    width: 500px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+}
+form {
+    margin: 30px;
+    text-align: center;
+}
+table {
+    margin: auto;
+}
+th{
+    text-align: left;
+}
+button {
+    width: 200px;
+    height: 50px;
+    font-family: 'Roboto Mono', monospace;
+    background-color: #e7e7e7;
+    color: black;
+    border-radius: 10px;
+    border-color: transparent;
+    font-size: medium;
+    font-weight: 600;
+    margin-top: 30px;
+}
+#cancel_btn {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}

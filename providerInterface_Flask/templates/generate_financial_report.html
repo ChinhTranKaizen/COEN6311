@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/generate_financial_report.css')}}">
+    <title>Generate financial report</title>
+</head>
+<body>
+    <a href="{{url_for('index')}}">Back to index</a> <br><br>
+
+    <h1>Financial report builder</h1>
+    <!-- insert start and end date to retrieve bill -->
+    <div class="item_container" id="filter_form">
+        <h4>Order filter:</h4>
+        <form action="{{url_for('get_bills')}}" method="POST">
+            <!-- lower limit -->
+            <label for="DateMin">From:</label>
+            <input type="date" id="DateMin" name="DateMin" required>
+            <!-- upper limit -->
+            <label for="DateMax">To:</label>
+            <input type="date" id="DateMax" name="DateMax" required>
+            <button id="filter">Filter</button>
+        </form>
+    </div>
+    {% if bills is defined %}
+    {% if bills|length != 0 %}
+        <div class="item_container">
+            <form action="{{url_for('generate_financial_report')}}" method="POST">
+                <input type="hidden" name="upperlimit" value="{{upperlimit}}">
+                <input type="hidden" name="lowerlimit" value="{{lowerlimit}}">
+                <button id="generate">Generate report for displayed bill</button>
+            </form>
+            {% for bill in bills %}
+            <div class="table_container">
+                <table>
+                    <tr>
+                        <th rowspan="2">Bill Id</th>
+                        <td rowspan="2">{{bill['billid']}}</td>
+                        <th colspan="2">{{bill['carbill']}} CAD</td>
+                    </tr>
+                    <tr>
+                        <th>Start date</th>
+                        <td>{{bill['startdate']}}</td>
+                        <th>End date</th>
+                        <td>{{bill['enddate']}}</td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <h4>There are no bills that fit your filter criteria</h4>
+    {% endif %}
+    {% endif %}
+    <!-- If there are bills available show them here -->
+    <!-- Show a form that has hidden values of upper limit and lower limit dates to process the bill -->
+        <!-- the button is generate report of these bills -->
+</body>
+</html>

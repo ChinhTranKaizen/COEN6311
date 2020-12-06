@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/edit_car.css')}}">
+    <script src="{{url_for('static', filename = 'js/edit_car.js')}}"></script>
+    <title>Edit car form</title>
+</head>
+<body>
+    <a href="{{url_for('car_list')}}">Back to car list</a> <br><br>
+    {% set editID = put_params['carid'] %}
+    {% set editEntryDate = put_params['entrydate'] %}
+    {% set editKmdriven = put_params['kmdriven'] %}
+    {% set editReleaseYear = put_params['releaseyear'] %}
+    {% set editCondition = put_params['condi'] %}
+    {% set editBrand = put_params['brand'] %}
+    {% set editType = put_params['style'] %}
+    {% set editState = put_params['state'] %}
+    {% set editPriceday = put_params['priceday'] %}
+    {% set editPricekm = put_params['pricekm'] %}
+    {% set oldID = old_params['carid'] %}
+    {% set oldEntryDate = old_params['entrydate'] %}
+    {% set oldKmdriven = old_params['kmdriven'] %}
+    {% set oldReleaseYear = old_params['releaseyear'] %}
+    {% set oldCondition = old_params['condi'] %}
+    {% set oldBrand = old_params['brand'] %}
+    {% set oldType = old_params['style'] %}
+    {% set oldState = old_params['state'] %}
+    {% set oldPriceday = old_params['priceday'] %}
+    {% set oldPricekm = old_params['pricekm'] %}
+    <h1>Confirm Edit for car ID: {{editID}}</h1>
+    <div class="item_container">
+        <form action="{{ url_for('confirm_edit')}}" method = 'POST'>
+            <input type="hidden" name="putID" value="{{editID}}">
+            <input type="hidden" name="putEntrydate" value="{{editEntryDate}}">
+            <input type="hidden" name="putKmdriven" value="{{editKmdriven}}">
+            <input type="hidden" name="putReleaseyear" value="{{editReleaseYear}}">
+            <input type="hidden" name="putBrand" value="{{editBrand}}">
+            <input type="hidden" name="putType" value="{{editType}}">
+            <input type="hidden" name="putState" value="{{editState}}">
+            <input type="hidden" name="putCondition" value="{{editCondition}}">
+            <input type="hidden" name="putPriceday" value="{{editPriceday}}">
+            <input type="hidden" name="putPricekm" value="{{editPricekm}}">
+            <table>
+                <tr>
+                    <td></td>
+                    <th>Current entry</th>
+                    <th>New entry</th>
+                </tr>
+                <!-- BRAND -->
+                <tr>
+                    <th>Brand</th>
+                    <td>{{oldBrand}}</td>
+                    {% if position != "Staff" %}
+                    <td>
+                        {{editBrand}}
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                <!-- TYPE -->
+                <tr>
+                    <th>Type</th>
+                    <td>{{oldType}}</td>
+                    {% if position != "Staff" %}
+                    <td>
+                        {{editType}}
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                <!-- RELEASE YEAR -->
+                <tr>
+                    <th>Realease year</th>
+                    <td>{{oldReleaseYear}}</td>
+                    {% if position != "Staff" %}
+                    <td>{{editReleaseYear}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                <!-- CONDITION -->
+                <tr>
+                    <th>Condition</th>
+                    <td>{{oldCondition}}</td>
+                    <td>
+                        {{editCondition}}
+                    </td>
+                </tr>
+                <!-- KM DRIVEN -->
+                <tr>
+                    <th>Km driven</th>
+                    <td>{{oldKmdriven}}</td>
+                    <td>{{editKmdriven}}</td>
+                </tr>
+                <!-- AVAILABILITY -->
+                <tr>
+                    <th>Availability</th>
+                    <td>{{oldState}}</td>
+                    <td>
+                        {{editState}}
+                    </td>
+                </tr>
+                {% if position != "Staff" %}
+                <!-- ENTRY DATE -->
+                <tr>
+                    <th>Entry date</th>
+                    <td>{{oldEntryDate}}</td>
+                    <td>{{editEntryDate}}</td>
+                </tr>
+                <!-- PRICE PER DAY -->
+                <tr>
+                    <th>Price per day</th>
+                    <td>{{oldPriceday}}</td>
+                    <td>{{editPriceday}}</td>
+                </tr>
+                <!-- PRICE PER KM -->
+                <tr>
+                    <th>Price per km</th>
+                    <td>{{oldPricekm}}</td>
+                    <td>{{editPricekm}}</td>
+                </tr>
+                {% endif %}
+            </table>
+            <button>Confirm edit</button>
+        </form>
+    </div>
+</body>
+</html>

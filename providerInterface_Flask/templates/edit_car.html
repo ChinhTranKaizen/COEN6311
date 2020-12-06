@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/edit_car.css')}}">
+    <script src="{{url_for('static', filename = 'js/edit_car.js')}}"></script>
+    <title>Edit car form</title>
 </head>
 <body>
-
+    <a href="{{url_for('car_list')}}">Back to car list</a> <br><br>
     {% set editID = editcar['editID'] %}
     {% set editEntryDate = editcar['editEntryDate'] %}
     {% set editKmdriven = editcar['editKmdriven'] %}
@@ -17,88 +19,128 @@
     {% set editState = editcar['editState'] %}
     {% set editPriceday = editcar['editPriceday'] %}
     {% set editPricekm = editcar['editPricekm'] %}
-
-<!--
-    {{editID}}
-    {{editEntryDate}}
-    {{editKmdriven}}
-    {{editReleaseYear}}
-    {{editCondition}}
-    {{editBrand}}
-    {{editType}}
-    {{editState}}
-    {{editPriceday}}
-    {{editPricekm}} -->
-    <h3>Edit car {{editID}}</h3>
-    <h4><i>Blank fields are assumed to take old values</i></h4>
-    <form action="{{ url_for('wrapup_edit')}}" method = 'post'>
-        <input type="hidden" name="oldID" value="{{editID}}">
-        <input type="hidden" name="oldEntrydate" value="{{editEntryDate}}">
-        <input type="hidden" name="oldKmdriven" value="{{editKmdriven}}">
-        <input type="hidden" name="oldReleaseyear" value="{{editReleaseYear}}">
-        <input type="hidden" name="oldBrand" value="{{editBrand}}">
-        <input type="hidden" name="oldType" value="{{editType}}">
-        {% if position != "Staff" %}
-            <label>Old entry date was: {{editEntryDate}} - New entry date: </label>
-            <input type="date" name="EntryDate" max="{{today}}"><br><br>
-
-            <label>Old km driven was: {{editKmdriven}} - New km driven: </label>
-            <input type="number" name="KmDriven" min="0" max = "300000"><br><br>
-
-            <label>Old release year was: {{editKmdriven}} - New release year: </label>
-            <input type="number" name="ReleaseYear" min="1950" max = "{{today[0:4]}}"><br><br>
-
-            <label>Old car brand was: {{editBrand}} - New brand: </label>
-            <select name="Brand">
-                <option value="" selected></option>
-                <option value="Toyota">Toyota</option>
-                <option value="Honda">Honda</option>
-                <option value="Mazda">Mazda</option>
-                <option value="Nissan">Nissan</option>
-                <option value="Subaru">Subaru</option>
-            </select><br><br>
-
-            <label>Old car type was: {{editType}} - New car type: </label>
-            <select name="Type">
-                <option value="" selected></option>
-                <option value="Sedan">Sedan</option>
-                <option value="SUV">SUV</option>
-                <option value="Minivan">Minivan</option>
-                <option value="Crossover">Crossover</option>
-                <option value="Wagon">Wagon</option>
-            </select>
-            <br><br>
-        {% endif %}
-        <!-- Staff position can only change the availability of a car and the condition of a car-->
-        <label>Old availability was: {{editState}} - New availability: </label>
-        <select name="State">
-            <option value="" selected></option>
-            <option value="True">True</option>
-            <option value="False">False</option>
-        </select>
-        <input type="hidden" name="oldState" value="{{editState}}"><br><br>
-
-        <label>Old condition was: {{editCondition}} - New condition: </label>
-        <select name="CarCondition">
-            <option value="" selected></option>
-            <option value="new">New</option>
-            <option value="slightly used">Slightly used</option>
-            <option value="used">Used</option>
-            <option value="old">Old</option>
-        </select>
-        <input type="hidden" name="oldCondition" value="{{editCondition}}"><br><br>
-        <input type="hidden" name="oldPriceday" value="{{editPriceday}}">
-        <input type="hidden" name="oldPricekm" value="{{editPricekm}}">
-        {% if position != "Staff" %}
-            <label>Old price per day was {{editPriceday}} - New Price per km:</label>
-            <input type="number" name="PriceDay" min="0" max = "100">
-            <br><br>
-
-            <label>Old price per km was {{editPricekm}} - New Price per km:</label>
-            <input type="number" name="PriceKm" min="0" max = "100">
-            <br><br>
-        {% endif %}
-        <input type="submit" value="Save changes">
-    </form>
+    <h1>Editing car with ID: {{editID}}</h1>
+    <div class="item_container">
+        <form action="{{ url_for('wrapup_edit')}}" method = 'post'>
+            <input type="hidden" name="oldID" value="{{editID}}">
+            <input type="hidden" name="oldEntrydate" value="{{editEntryDate}}">
+            <input type="hidden" name="oldKmdriven" value="{{editKmdriven}}">
+            <input type="hidden" name="oldReleaseyear" value="{{editReleaseYear}}">
+            <input type="hidden" name="oldBrand" value="{{editBrand}}">
+            <input type="hidden" name="oldType" value="{{editType}}">
+            <input type="hidden" name="oldState" value="{{editState}}">
+            <input type="hidden" name="oldCondition" value="{{editCondition}}">
+            <input type="hidden" name="oldPriceday" value="{{editPriceday}}">
+            <input type="hidden" name="oldPricekm" value="{{editPricekm}}">
+            <table>
+                <tr>
+                    <td></td>
+                    <th>Current entry</th>
+                    <th>New entry</th>
+                </tr>
+                <!-- BRAND -->
+                <tr>
+                    <th>Brand</th>
+                    <td>{{editBrand}}</td>
+                    {% if position != "Staff" %}
+                    <td>
+                        <select name="Brand" required>
+                            <option value="" selected></option>
+                            <option value="Toyota">Toyota</option>
+                            <option value="Honda">Honda</option>
+                            <option value="Mazda">Mazda</option>
+                            <option value="Nissan">Nissan</option>
+                            <option value="Subaru">Subaru</option>
+                        </select>
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                <!-- TYPE -->
+                <tr>
+                    <th>Type</th>
+                    <td>{{editType}}</td>
+                    {% if position != "Staff" %}
+                    <td>
+                        <select name="Type" required>
+                            <option value="" selected></option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Minivan">Minivan</option>
+                            <option value="Crossover">Crossover</option>
+                            <option value="Wagon">Wagon</option>
+                        </select>
+                    </td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                <!-- RELEASE YEAR -->
+                <tr>
+                    <th>Realease year</th>
+                    <td>{{editReleaseYear}}</td>
+                    {% if position != "Staff" %}
+                    <td><input type="number" id="ReleaseYear" name="ReleaseYear" min="1950" max = "{{today[0:4]}}" required></td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                </tr>
+                <!-- CONDITION -->
+                <tr>
+                    <th>Condition</th>
+                    <td>{{editCondition}}</td>
+                    <td>
+                        <select name="CarCondition" required>
+                            <option value="" selected></option>
+                            <option value="new">New</option>
+                            <option value="slightly used">Slightly used</option>
+                            <option value="used">Used</option>
+                            <option value="old">Old</option>
+                        </select>
+                    </td>
+                </tr>
+                <!-- KM DRIVEN -->
+                <tr>
+                    <th>Km driven</th>
+                    <td>{{editKmdriven}}</td>
+                    <td><input type="number" name="KmDriven" min="0" max = "300000" required></td>
+                </tr>
+                <!-- AVAILABILITY -->
+                <tr>
+                    <th>Availability</th>
+                    <td>{{editState}}</td>
+                    <td>
+                        <select name="State" required>
+                            <option value="" selected></option>
+                            <option value="True">True</option>
+                            <option value="False">False</option>
+                        </select>
+                    </td>
+                </tr>
+                {% if position != "Staff" %}
+                <!-- ENTRY DATE -->
+                <tr>
+                    <th>Entry date</th>
+                    <td>{{editEntryDate}}</td>
+                    <td><input type="date" id="EntryDate" name="EntryDate" max="{{today}}" required></td>
+                </tr>
+                <!-- PRICE PER DAY -->
+                <tr>
+                    <th>Price per day</th>
+                    <td>{{editPriceday}}</td>
+                    <td><input type="number" name="PriceDay" min="0" max = "100" required></td>
+                </tr>
+                <!-- PRICE PER KM -->
+                <tr>
+                    <th>Price per km</th>
+                    <td>{{editPricekm}}</td>
+                    <td><input type="number" name="PriceKm" min="0" max = "100" required></td>
+                </tr>
+                {% endif %}
+            </table>
+            <button>Save changes</button>
+        </form>
+    </div>
 </body>
 </html>

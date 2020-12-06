@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/success_financial_report.css')}}">
+    <title>Success report generation</title>
+</head>
+<body>
+    <a href="{{url_for('index')}}">Back to index</a> <br><br>
+    <h1>Report successfully generated</h1>
+    <div class="item_container">
+        <table>
+            <tr>
+                <th>Report date</th>
+                <td>{{params['reportdate']}}</td>
+            </tr>
+            <tr>
+                <th>Report duration</th>
+                <td>{{params['durationreported']}}</td>
+            </tr>
+            <tr>
+                <th>Revenue</th>
+                <td>{{params['revenue']}}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+//use REST API to map the HTTP requests
+
 @RestController
 public class BillController
 {
@@ -19,37 +21,43 @@ public class BillController
 	private BillService billService;
 	
 	
-	
+	// return all the bills to localhost:3001/employees
 	@GetMapping(value="/bills")
 	public Iterable<Bill> getAllBills()  
 	{
 		return billService.getAllBills();
 	}
 	
-	@GetMapping(value="/bills/{id}")
-	public Optional<Bill> getTBilln(@PathVariable Integer id)
+	//return an bill using its id to localhost:3001/bills/billid
+
+	@GetMapping(value="/bills/{billid}")
+	public Optional<Bill> getBill(@PathVariable Integer billid)
 	{
-		return billService.getBill(id);
+		return billService.getBill(billid);
 	}
 	
-	
+	// receive an bill from localhost:3001/bills
+
 	@PostMapping(value="/bills")
 	public void addBill(@RequestBody Bill bill)
 	{
 		billService.addBill(bill);
 	}
 	
-    @PutMapping(value="/bills/{id}")
-	public void updateBill(@RequestBody Bill bill, @PathVariable Integer id )
+	
+	// update an bill using its id to localhost:3001/bills/billid
+    @PutMapping(value="/bills/{billid}")
+	public void updateBill(@RequestBody Bill bill, @PathVariable Integer billid )
 	{
-    	billService.updateBill(id, bill);
+    	billService.updateBill(billid, bill);
 	}
 	
+    //delete an bill using its id to localhost:3001/bills/billid
 
-    @DeleteMapping(value="/bills/{id}")
-    public void deleteBill(@PathVariable Integer id)
+    @DeleteMapping(value="/bills/{billid}")
+    public void deleteBill(@PathVariable Integer billid)
 	{
-    	billService.deleteBill(id);
+    	billService.deleteBill(billid);
 	}
 	
 

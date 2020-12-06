@@ -1,9 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
 body {
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: 'Roboto Mono', monospace;
     background-color: lightgrey;
 }
 
-h2 {
+h1, h2 {
     text-align: center;
 }
 
@@ -14,6 +16,8 @@ input[type=text], input[type=password] {
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
+    font-size: medium;
+    font-family: 'Roboto Mono', monospace;
 }
 
 button {
@@ -24,6 +28,9 @@ button {
     border: none;
     cursor: pointer;
     width: 100%;
+    font-family: 'Roboto Mono', monospace;
+    font-size: large;
+    font-weight: 700;
 }
 
 button:hover {

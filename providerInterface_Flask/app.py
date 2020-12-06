@@ -3,19 +3,23 @@ from flask import Flask, redirect, url_for, render_template, request, session, a
 # First: C:\Users\OS\COEN6311\car-rental-all-class
 # Then: ./mvnw spring-boot:run
 # Please execute: "$env:FLASK_RUN_PORT = 5001" to change your port
+# Set Flask to debug mode :$env:FLASK_ENV = "development"
 from datetime import date, datetime
-import requests, uuid, json
-import os
+import requests, uuid, json, os
 
 import checkemail
 
 app = Flask(__name__)
+
 app.secret_key = "coen6311"
-#The first page when starting provider interface: return the log_in page
+
+#This is the index endpoint.
 @app.route("/")
 def index():
     # This should return the login page if login successfully, return the index.html page
+    # Checking session value for "username" attribute
     if session.get('username') is not None:
+        #Pass on the user's username and position for display in the html page
         return render_template("index.html", username = session.get('username'), position = session.get('position'))
     else:
         return render_template("log_in.html")
@@ -23,50 +27,66 @@ def index():
 #This is a in-between route that processes log-in information
 @app.route("/login", methods =["POST"])
 def login():
+    #Check if the user is logged in by accessing the session variable
+    if session.get('username') is not None:
+        return redirect(url_for('index'))
     #Set up the parameters for getting all employees from the database to process log-in information
     url = "http://localhost:3001/employees"
     r = requests.request("GET",url).json()
+    #Get the data from html form POST request with name "username" and "password"
     username = str(request.form.get("username"))
     password = str(request.form.get("password"))
 
-    #Check for every responses in the response message, if there is a match, change the token to username
+    #Check for every responses in the response message, if there is a match, make changes to the session variable
     for response in r:
         if response["name"] == username and response["password"]==password:
+            #In case the user account is not activated, return an error:
             if response["activation"] == False:
                 return abort(make_response({'message': 'Your account is not activated. Please contact the manager.'},400))
-            else:
+            else: #just change the session variable to store the user's username and position (for service access restriction)
                 session['username'] = response['name']
                 session['position'] = response['position']
                 break
+    #Checks if the user logs in successfully by accessing session variable
     if session.get('username') is not None:
+        #passing "username" and "position" to display in index html
         return render_template("index.html", username = session.get('username'), position = session.get('position')) #log in sucessfully
     else:
+        #returns bad_log_in html when session variable does not contain username
         return render_template("bad_log_in.html") #log in fails
 
 #A route to open registration form html page
 @app.route("/register_form", methods = ["GET", "POST"])
 def register_form():
+    #If access via GET -> return the registration form
     if request.method == "GET":
         return render_template("register.html")
+    #if access via POST (usually from html form) -> processing registration data
     elif request.method == "POST":
         #Preparing the parameters to send the Java spring boot server
+        #Checks for length of password
         if len(str(request.form.get("password"))) < 8:
             abort(make_response({'message': 'Password needs to be at least 8 characters'},400))
+        #Checks for Position: only Staff and Finance people are allowed to register
         elif str(request.form.get("position")) != "Staff" and str(request.form.get("position")) != "Finance":
             abort(make_response({'message': 'New employees can only be Staff or Finance'},400))
+        #Check for if the entered email is valid using "checkemail" module
         elif not checkemail.check(str(request.form.get("email"))):
             abort(make_response({'message': 'Email entered is invalid'},400))
+        #Check the default activation: new users must have it at "false" so that manager can later activate their accounts
         elif str(request.form.get('activation')) != "false":
             abort(make_response({'message': 'New user must await activation from manager'},400))
-        else:
+        else: #The input passes every test above:
+            #Prepare endpoint for making requests to Springboot server
             url = 'http://localhost:3001/employees'
+            #Get the list of employees from the backend to check for existing name or email
             r1 = requests.get(url).json()
             for response1 in r1:
                 if response1['name'] == str(request.form.get("fullname")):
                     abort(make_response({'message': 'Name already exists.'},400))
                 elif response1['email'] == str(request.form.get("email")):
                     abort(make_response({'message': 'Email already exists.'},400))
-
+            #Preparing the body for making POST request to create new employee
             params = {'employeeid': str(request.form.get("id")),
                 'name' : str(request.form.get("fullname")),
                 'password' : str(request.form.get("password")),
@@ -81,39 +101,94 @@ def register_form():
             #Depends on if the registration is successful or not, return it to display in log_in html
             return render_template("log_in.html", response_status = r.status_code)
 
+#Remove session variable when the user logs out
 @app.route("/logout")
 def logout():
     session.pop('username', None)
     session.pop('position', None)
+    #Then return them to log in page
     return redirect(url_for('index'))
 
-@app.route('/manage_accounts',methods = ["GET", "POST"])
+# This is for activitating inactivated employees or remove employee accounts and not managing every aspect of employees account
+@app.route('/manage_accounts', methods = ["GET", "POST"])
 def manage_accounts():
+    #Check for log in status and access privileges
     if session.get('username') is None:
         return redirect(url_for("index"))
     elif session.get('position') == "Staff" or session.get('position') == "Finance":
-        abort(make_response({'message': 'Not enough authorization'},404))
+        abort(make_response({'message': 'Not enough authorization'},403))
+
+    #Prep endpoint to get the list of employees
     url = "http://localhost:3001/employees"
     r = requests.request("GET",url).json()
+
+    #Get request endpoint to display list of employees
     if request.method == "GET":
         employees = []
         for user in r:
-            if user['activation'] == False:
-                user.pop('password', None)
-                employees.append(user)
-
+            #remove passwords because of "reasons"
+            user.pop('password', None)
+            #Managers should not be included in the list
+            if user['position'] == "Manager":
+                continue
+            employees.append(user)
+        #Pass in employees variable to be displayed in html
         return render_template('manage_accounts.html',employees=employees)
+
+    #Post request from html form to finalize the activation
     if request.method == "POST":
+        #Get the activated employee from html form from confirm_activate_accounts.html
         employee_id = request.form.get('id')
+        #Prepare the Put request body to be send
         put_employee = {}
         for employee in r:
             if employee['employeeid'] == int(employee_id):
                 put_employee = employee
+                #Set the employee account activation status to True
                 put_employee['activation'] = True
+        #Prepare the put request headers and url
         headers = {'content-type': 'application/json'}
         url = 'http://localhost:3001/employees/'+str(employee_id)
+        #Make the request
         r = requests.put(url, data =json.dumps(put_employee),headers=headers)
+        #return to employee list
         return redirect(url_for('manage_accounts'))
+
+#This endpoint allow displaying the confirmation page for employee activation
+@app.route('/confirm_activate_accounts',methods = ['POST'])
+def confirm_activate_accounts():
+    #Check for login status and access privileges
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+    elif session.get('position') == "Staff" or session.get('position') == "Finance":
+        abort(make_response({'message': 'Not enough authorization'},403))
+
+    #Get the employee with the submitted id from html form (from manage_accounts.html) to display in confirm page
+    url = "http://localhost:3001/employees/" + str(request.form.get('id'))
+    r = requests.request("GET",url).json()
+
+    return render_template("confirm_activation.html", employee_confirm = r)
+
+#Remove account endpoint
+@app.route('/remove_account',methods = ['POST'])
+def remove_account():
+
+    employee_id = request.form.get('id')
+    url = 'http://localhost:3001/employees/'+str(employee_id)
+    requests.delete(url)
+    return redirect(url_for('manage_accounts'))
+
+@app.route('/confirm_remove_accounts',methods = ['POST'])
+def confirm_remove_accounts():
+    if session.get('username') is None:
+        return redirect(url_for("index"))
+    elif session.get('position') == "Staff" or session.get('position') == "Finance":
+        abort(make_response({'message': 'Not enough authorization'},403))
+
+    url = "http://localhost:3001/employees/" + str(request.form.get('id'))
+    r = requests.request("GET",url).json()
+
+    return render_template("confirm_account_deletion.html", employee_confirm = r)
 
 #An html page that displays the car list, whose content is fetched from the server
 #This also acts as an in-between page to process adding cars to the fleet requests from add_car_form below
@@ -189,19 +264,19 @@ def add_car_form():
 def delete_confirmation():
     if session.get('position') == "Staff":
         abort(make_response({'message': 'Not enough authorization'},404))
+    r = requests.get('http://localhost:3001/cars/'+ str(request.form.get("DeleteID"))).json()
     deletecar = {
-        'deleteID' : str(request.form.get("DeleteID")),
-        'entryDate' : str(request.form.get("DeleteEntrydate")),
-        'kmDriven' : str(request.form.get("DeleteKmdriven")),
-        'releaseYear' : str(request.form.get("DeleteReleaseyear")),
-        'condition' : str(request.form.get("DeleteCondition")),
-        'priceKm' : str(request.form.get("DeletePricekm")),
-        'brand': str(request.form.get("DeleteBrand")),
-        'type' : str(request.form.get("DeleteType")),
-        'state' : str(request.form.get("DeleteState")),
-        'priceday' : str(request.form.get("DeletePriceday"))
+        'deleteID' : r['carid'],
+        'entryDate' : r["entrydate"],
+        'kmDriven' : r["kmdriven"],
+        'releaseYear' : r["releaseyear"],
+        'condition' : r["condi"],
+        'priceKm' : r["pricekm"] ,
+        'brand': r["brand"] ,
+        'type' : r["style"],
+        'state' : r["state"] ,
+        'priceday' : r["priceday"]
     }
-
     return render_template("delete_confirmation.html", deletecar = deletecar)
 
 #This is an in-between route to process delete requests based on ID.
@@ -217,17 +292,18 @@ def delete():
 
 @app.route("/edit_car",methods=["POST"])
 def edit_car():
+    r = requests.get('http://localhost:3001/cars/'+ str(request.form.get("EditID"))).json()
     editcar = {
-        'editID' : str(request.form.get("EditID")),
-        'editEntryDate' : str(request.form.get("EditEntrydate")),
-        'editKmdriven' : str(request.form.get("EditKmdriven")),
-        'editReleaseYear' : str(request.form.get("EditReleaseyear")),
-        'editCondition' : str(request.form.get("EditCondition")),
-        'editPricekm' : str(request.form.get("EditPricekm")),
-        'editBrand': str(request.form.get("EditBrand")),
-        'editType' : str(request.form.get("EditType")),
-        'editState' : str(request.form.get("EditState")),
-        'editPriceday' : str(request.form.get("EditPriceday"))
+        'editID' : r['carid'],
+        'editEntryDate' : r["entrydate"],
+        'editKmdriven' : r["kmdriven"],
+        'editReleaseYear' : r["releaseyear"],
+        'editCondition' : r["condi"],
+        'editPricekm' : r["pricekm"] ,
+        'editBrand': r["brand"] ,
+        'editType' : r["style"],
+        'editState' : r["state"] ,
+        'editPriceday' : r["priceday"]
     }
     today = date.today()
     d1 = today.strftime("%Y-%m-%d")
@@ -270,22 +346,23 @@ def wrapup_edit():
     if str(request.form.get("EntryDate")) == "" or request.form.get("EntryDate") is None:
         PutEntryDate = str(request.form.get("oldEntrydate"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        #THERE IS A BUG HERE
+        # if session.get('position') == "Staff" and (str(request.form.get("EntryDate")) != "" or request.form.get("EntryDate") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},403))
         PutEntryDate = str(request.form.get("EntryDate"))
 
     if str(request.form.get("KmDriven")) == "" or request.form.get("KmDriven") is None:
         PutKmDriven = str(request.form.get("oldKmdriven"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        # if session.get('position') == "Staff" and (str(request.form.get("KmDriven")) != "" or request.form.get("KmDriven") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},403))
         PutKmDriven = str(request.form.get("KmDriven"))
 
     if str(request.form.get("ReleaseYear")) == "" or request.form.get("ReleaseYear") is None:
         PutReleaseYear = str(request.form.get("oldReleaseyear"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        # if session.get('position') == "Staff" and (str(request.form.get("ReleaseYear")) != "" or request.form.get("ReleaseYear") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},403))
         PutReleaseYear = str(request.form.get("ReleaseYear"))
 
     if str(request.form.get("CarCondition")) == "" or request.form.get("CarCondition") is None:
@@ -296,29 +373,29 @@ def wrapup_edit():
     if str(request.form.get("PriceKm")) == "" or request.form.get("PriceKm") is None:
         PutPriceKm = str(request.form.get("oldPricekm"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        # if session.get('position') == "Staff" and (str(request.form.get("PriceKm")) != "" or request.form.get("PriceKm") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},403))
         PutPriceKm = str(request.form.get("PriceKm"))
 
     if str(request.form.get("PriceDay")) == "" or request.form.get("PriceDay") is None:
         PutPriceDay = str(request.form.get("oldPriceday"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        # if session.get('position') == "Staff" and (str(request.form.get("PriceDay")) != "" or request.form.get("PriceDay") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},403))
         PutPriceDay = str(request.form.get("PriceDay"))
 
     if str(request.form.get("Brand")) == "" or request.form.get("Brand") is None:
         PutBrand = str(request.form.get("oldBrand"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        # if session.get('position') == "Staff" and (str(request.form.get("Brand")) != "" or request.form.get("Brand") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},403))
         PutBrand = str(request.form.get("Brand"))
 
     if str(request.form.get("Type")) == "" or request.form.get("Type") is None:
         PutType = str(request.form.get("oldType"))
     else:
-        if session.get('position') == "Staff":
-            abort(make_response({'message': 'Not enough authorization'},404))
+        # if session.get('position') == "Staff" and (str(request.form.get("Type")) != "" or request.form.get("Type") is not None):
+        #     abort(make_response({'message': 'Not enough authorization'},404))
         PutType = str(request.form.get("Type"))
 
     if str(request.form.get("State")) == "" or request.form.get("State") is None:
@@ -331,8 +408,8 @@ def wrapup_edit():
     if int(date1[0:4])<int(date2):
         return abort(make_response({'message': "The entry year cannot be smaller than the release year."},400))
     else:
-        url = "http://localhost:3001/cars" + "/" + PutID
-        params = {'carid': PutID,
+
+        put_params = {'carid': PutID,
                 'entrydate': PutEntryDate,
                 'kmdriven': PutKmDriven,
                 'releaseyear': PutReleaseYear,
@@ -344,12 +421,45 @@ def wrapup_edit():
                 "style": PutType,
                 "priceday": PutPriceDay
                 }
-        print(params)
-        print(url)
-        headers = {'content-type': 'application/json'}
-        r = requests.request('PUT',url, data = json.dumps(params), headers=headers)
+        old_params = {'carid': PutID,
+                'entrydate': str(request.form.get("oldEntrydate")),
+                'kmdriven': str(request.form.get("oldKmDriven")),
+                'releaseyear': str(request.form.get("oldReleaseyear")),
+                'condi': str(request.form.get("oldCondition")),
+                'pricekm': str(request.form.get("oldPricekm")),
+                "state": str(request.form.get("oldState")),
+                "brand": str(request.form.get("oldBrand")),
+                "model": "",
+                "style": str(request.form.get("oldType")),
+                "priceday": str(request.form.get("oldPriceday"))
+                }
 
-        return redirect(url_for("car_list"))
+        # headers = {'content-type': 'application/json'}
+        # r = requests.request('PUT',url, data = json.dumps(put_params), headers=headers)
+
+        # return redirect(url_for("car_list"))
+        return render_template("confirm_edit.html",put_params = put_params, old_params = old_params, position = session.get('position'))
+
+@app.route("/confirm_edit", methods = ["POST"])
+def confirm_edit():
+    url = "http://localhost:3001/cars" + "/" + str(request.form.get("putID"))
+    put_params = {'carid': str(request.form.get("putID")),
+                'entrydate': str(request.form.get("putEntrydate")),
+                'kmdriven': str(request.form.get("putKmdriven")),
+                'releaseyear': str(request.form.get("putReleaseyear")),
+                'condi': str(request.form.get("putCondition")),
+                'pricekm': str(request.form.get("putPricekm")),
+                "state": str(request.form.get("putState")),
+                "brand": str(request.form.get("putBrand")),
+                "model": "",
+                "style": str(request.form.get("putType")),
+                "priceday": str(request.form.get("putPriceday"))
+                }
+    print(put_params)
+    headers = {'content-type': 'application/json'}
+    r = requests.request('PUT',url, data = json.dumps(put_params), headers=headers)
+
+    return redirect(url_for("car_list"))
 
 #Sprint 2: filter car with a form
 @app.route("/filter_form", methods = ["POST", "GET"])
@@ -469,7 +579,7 @@ def filter_form():
                 abort(make_response({'message': "Invalid car type given"},400))
             cars_for_removal = []
             for car in r:
-                if car['type']!=Type:
+                if car['style']!=Type:
                     cars_for_removal.append(car)
             for car in cars_for_removal:
                 r.remove(car)
@@ -543,6 +653,104 @@ def filter_form():
         d1 = today.strftime("%Y-%m-%d")
         return render_template("filter_form.html",today=d1)
 
-if __name__ == '__main__':
+#Sprint3: For Managers: manage employees account, managers can read report, finance people can generate reports
 
+@app.route('/generate_financial_report', methods =['POST', 'GET'])
+def generate_financial_report():
+    if session.get('position') != 'Finance':
+        abort(make_response({'message': "Not enough authorization."},403))
+
+    today = date.today()
+    d1 = today.strftime("%Y-%m-%d")
+
+    url = 'http://localhost:3001/bills'
+    r = requests.get(url).json()
+
+    if request.method == "GET":
+        return render_template('generate_financial_report.html', today=d1)
+    elif request.method == "POST":
+        url = 'http://localhost:3001/bills'
+        r = requests.get(url).json()
+        lowerlimit = request.form.get('lowerlimit')
+        upperlimit = request.form.get('upperlimit')
+        if upperlimit != "" and lowerlimit != "":
+            a = upperlimit.split("-")
+            date_a = date(int(a[0]),int(a[1]),int(a[2]))
+            b = lowerlimit.split("-")
+            date_b = date(int(b[0]),int(b[1]),int(b[2]))
+            if date_a < date_b:
+                return abort(make_response({'message': "The max year cannot be smaller than the min year."},400))
+            bills_for_removal = []
+            for bill in r:
+                c = bill['startdate'].split("-")
+                date_c = date(int(c[0]),int(c[1]),int(c[2]))
+                if date_c>date_a or date_c < date_b:
+                    bills_for_removal.append(bill)
+            for bill in bills_for_removal:
+                r.remove(bill)
+        else:
+            return abort(make_response({'message': "both lower and upper limits are required"},400))
+
+        duration = str(date_a - date_b).split(',')
+        report_duration = duration[0]
+        report_date = d1
+        report_revenue = 0
+        for bill in r:
+            report_revenue += int(bill['carbill'])
+
+        url = 'http://localhost:3001/reports'
+        headers = {'content-type': 'application/json'}
+        params = {
+            'reportdate': report_date,
+            'revenue': report_revenue,
+            'durationreported': report_duration
+        }
+        r = requests.post(url, data=json.dumps(params),headers=headers)
+        return render_template('success_financial_report.html', params = params)
+
+@app.route('/get_bills', methods = ['POST'])
+def get_bills():
+
+    lowerlimit = request.form.get('DateMin')
+    upperlimit = request.form.get('DateMax')
+
+    url = 'http://localhost:3001/bills'
+    r = requests.get(url).json()
+
+    #Only filters based on start date
+    if upperlimit != "" and lowerlimit != "":
+        a = upperlimit.split("-")
+        date_a = date(int(a[0]),int(a[1]),int(a[2]))
+        b = lowerlimit.split("-")
+        date_b = date(int(b[0]),int(b[1]),int(b[2]))
+        if date_a < date_b:
+            return abort(make_response({'message': "The max year cannot be smaller than the min year."},400))
+        bills_for_removal = []
+        for bill in r:
+            c = bill['startdate'].split("-")
+            date_c = date(int(c[0]),int(c[1]),int(c[2]))
+            if date_c>date_a or date_c < date_b:
+                bills_for_removal.append(bill)
+        for bill in bills_for_removal:
+            r.remove(bill)
+    else:
+        return abort(make_response({'message': "both lower and upper limits are required"},400))
+
+    bills = r
+
+    today = date.today()
+    d1 = today.strftime("%Y-%m-%d")
+
+    return render_template('generate_financial_report.html', today = d1, bills = bills, upperlimit=upperlimit, lowerlimit=lowerlimit)
+
+@app.route('/financial_report', methods = ['GET'])
+def financial_report():
+    if session.get('position') != 'Manager':
+        abort(make_response({'message': "invalid authorization"},403))
+    url = 'http://localhost:3001/reports'
+    r = requests.get(url).json()
+    return render_template('financial_report.html', reports = r)
+
+if __name__ == '__main__':
+    os.environ['FLASK_ENV']= "development"
     app.run(port=5001)

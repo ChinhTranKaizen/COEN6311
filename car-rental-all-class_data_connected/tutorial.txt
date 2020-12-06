@@ -1,3 +1,0 @@
-# To start server :
-# First: C:\Users\OS\COEN6311\car-rental-all-class
-# Then: ./mvnw spring-boot:run

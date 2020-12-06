@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
+
+body {
+    font-family: 'Roboto Mono', monospace;
+}
+
+h1, h2, h4 {
+    text-align: center;
+}
+
+.item_container {
+    width: 700px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
+}
+
+input[type=number], input[type=date], select {
+    width: 170px;
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid #ccc;
+    font-size: medium;
+    font-family: 'Roboto Mono', monospace;
+    text-align: center;
+    border-radius: 5px;
+}
+td {
+    width: 200px;
+}
+tr {
+    height: 50px;
+}
+
+option{
+    text-align: center;
+}
+form {
+    margin: 30px;
+    text-align: center;
+}
+table {
+    margin: auto;
+}
+button {
+    width: 200px;
+    height: 50px;
+    font-family: 'Roboto Mono', monospace;
+    background-color: #e7e7e7;
+    color: black;
+    border-radius: 10px;
+    border-color: transparent;
+    font-size: medium;
+    font-weight: 600;
+    margin-top: 20px;
+}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/loginprocess.css')}}">
+    <title>Add_bill</title>
+</head>
+<body>
+
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1><br>
+
+    <h1>Your order has been placed sucessfully!</h1>
+    <div class="btn_container">
+        <div class="btn">
+            <a href="loginprocess"><button>Back to index</button></a> <br>
+        </div>
+    </div>
+
+
+</body>
+</html>

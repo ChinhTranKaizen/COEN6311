@@ -3,25 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{{url_for('static', filename='css/delete_confirmation.css')}}">
+    <title>Delete confirmation</title>
 </head>
 <body>
     <h3>Are you sure you want to delete the following car:</h3>
-    <form id="delete_form" action="{{ url_for('delete') }}" method="post">
-        <label>CarID: {{deletecar['deleteID']}}</label>
-        {% set id = deletecar['deleteID'] %}
-        <input type="hidden" name="DeleteID" value={{id}}>
-        <label>Entry date: {{deletecar['entryDate']}}</label> <br>
-        <label>Km driven: {{deletecar['kmDriven']}}</label> <br>
-        <label>Release year: {{deletecar['releaseYear']}}</label> <br>
-        <label>Condition: {{deletecar['condition']}}</label> <br>
-        <label>Brand: {{deletecar['brand']}} </label> <br>
-        <label>Car type : {{deletecar['type']}} </label> <br>
-        <label>Availability: {{deletecar['state']}}</label> <br>
-        <label>Price per Km: {{deletecar['priceKm']}}</label> <br>
-        <label>Price per day: {{deletecar['priceday']}} </label> <br>
-        <input type="submit" value="Confirm">
-    </form>
-    <a href="{{url_for('car_list')}}"><button>Cancel</button></a>
+    <div class="item_container">
+        <form id="delete_form" action="{{ url_for('delete') }}" method="post">
+            {% set id = deletecar['deleteID'] %}
+            <input type="hidden" name="DeleteID" value={{id}}>
+            <table>
+                <tr>
+                    <th>CarID:</th>
+                    <td>{{deletecar['deleteID']}}</td>
+                </tr>
+                <tr>
+                    <th>Brand:</th>
+                    <td>{{deletecar['brand']}}</td>
+                </tr>
+                <tr>
+                    <th>Car type:</th>
+                    <td>{{deletecar['type']}}</td>
+                </tr>
+                <tr>
+                    <th>Entry date:</th>
+                    <td>{{deletecar['entryDate']}}</td>
+                </tr>
+                <tr>
+                    <th>Km driven:</th>
+                    <td>{{deletecar['kmDriven']}}</td>
+                </tr>
+                <tr>
+                    <th>Release year:</th>
+                    <td>{{deletecar['releaseYear']}}</td>
+                </tr>
+                <tr>
+                    <th>Condition:</th>
+                    <td>{{deletecar['condition']}}</td>
+                </tr>
+
+                <tr>
+                    <th>Availability:</th>
+                    <td>{{deletecar['state']}}</td>
+                </tr>
+                <tr>
+                    <th>Price per Km:</th>
+                    <td>{{deletecar['priceKm']}}</td>
+                </tr>
+                <tr>
+                    <th>Price per day:</th>
+                    <td>{{deletecar['priceday']}}</td>
+                </tr>
+            </table>
+            <button>Confirm</button>
+        </form>
+        <a href="{{url_for('car_list')}}"><button id="cancel_btn">Cancel</button></a>
+    </div>
 </body>
 </html>

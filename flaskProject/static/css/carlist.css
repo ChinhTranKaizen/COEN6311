@@ -1,93 +1,85 @@
-* {
-    padding: 0;
-    margin: 0;
-}
-
-html {
-    height: 100%;
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
 body {
-    height: 100%;
-    font-family: "agency fb";
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f0f0f6;
+    font-family: 'Roboto Mono', monospace;
 }
 
-.form-wrapper {
-    width: 300px;
-    background-color: #dadaff;
-    color: #000000;
-    border-radius: 2px;
-    padding: 20px;
-}
-
-.form-wrapper .header {
+h1 {
     text-align: center;
-    font-size: 35px;
-    text-transform: uppercase;
-    line-height: 100px;
 }
 
-.form-wrapper .input-wrapper input {
-    background-color: #F5F5F5;
-    border: 0;
-    width: 100%;
+.item_container {
+    width: 850px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
     text-align: center;
-    font-size: 15px;
-    color: #000000;
-    outline: none;
+    border: 1px solid #e7e7e7;
+    border-radius: 10px;
 }
 
-.form-wrapper .input-wrapper input::placeholder {
-    font-family: "agency fb";
-    text-transform: uppercase;
+table {
+    align-self: center;
+    margin: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    width: 800px;
 }
 
-.form-wrapper .input-wrapper .border-wrapper {
-    background-image: linear-gradient(to right, #d9afd9,#97d9e1);
-    width: 100%;
-    height: 50px;
-    margin-bottom: 20px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.form-wrapper .input-wrapper2 .border-wrapper2 {
-    background-image: linear-gradient(to right, #d9afd9,#97d9e1);
-    width: 40%;
-    height: 50px;
-    margin-bottom: 20px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-.form-wrapper .input-wrapper .border-wrapper .border-item {
-    height: calc(100% - 4px);
-    width: calc(100% - 4px);
-    border-radius: 30px;
+.btn {
+    width: 90px;
+    height: 100px;
+    font-family: 'Roboto Mono', monospace;
+    background-color: #e7e7e7;
+    color: black;
+    border-radius: 10px;
+    border-color: transparent;
+    font-size: small;
+    font-weight: 600;
 }
 
-.form-wrapper .action {
-    display: flex;
-    justify-content: center;
-}
-
-.form-wrapper .action .btn {
-    width: 60%;
-    text-transform: uppercase;
-    border: 2px solid #710bd7;
-    margin-bottom: 20px;
+.func_div {
+    width: 800px;
+    margin: auto;
     text-align: center;
-    line-height: 50px;
-    border-radius: 30px;
-    cursor: pointer;
+    height: 90px;
+}
+th {
+    text-align: left;
+    padding: 0 10px 0 10px;
+    width: 145px;
 }
 
-.form-wrapper .action .btn:hover {
-    background-color: linear-gradient(to right, #d9afd9,#97d9e1);
+.func_btn {
+    margin: 20px;
+    width: 170px;
+    height: 65px;
+    font-family: 'Roboto Mono', monospace;
+    background-color: #e7e7e7;
+    color: black;
+    border-radius: 10px;
+    border-color: transparent;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#remove_btn {
+    background-color: rgba(211, 50, 50, 0.685);
+    color: white;
+}
+
+form {
+    margin: 20px;
+    text-align: center;
+}
+
+#btn {
+    width: 100px;
+}
+#edit_form {
+    margin: 20px;
+}
+
+td {
+    width: 140px;
 }

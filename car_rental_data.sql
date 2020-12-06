@@ -2,6 +2,10 @@ DROP DATABASE IF EXISTS car_rental_database;
 CREATE DATABASE car_rental_database;
 USE car_rental_database;
 
+/* Customer table associated to the customer class in the spring boot project*/
+/* the customer id is auto incremented and while inserting an object the id is not specified it's added by the database */
+/* The type are the same as the attribute types in the spring boot project*/
+
 CREATE TABLE Customer (
   customerid int NOT NULL AUTO_INCREMENT,
   username varchar(50) NOT NULL,
@@ -30,6 +34,10 @@ INSERT INTO Customer(username,`password`,firstname,lastname,phone,email,country,
 
 
 
+/* Employee table associated to the Employee class in the spring boot project*/
+/* the Employee id is auto incremented and while inserting an object the id is not specified it's added by the database */
+/* The type are the same as the attribute types in the spring boot project*/
+/* the managers activation is true at the time of creation*/
 
 CREATE TABLE Employee (
   employeeid int NOT NULL AUTO_INCREMENT,
@@ -56,6 +64,9 @@ INSERT INTO Employee(`password`,`name`,position,email,activation) VALUES ('30330
 INSERT INTO Employee(`password`,`name`,position,email,activation) VALUES ('304304304','Mirilla','Staff','Mirilla@hotmail.com',false);
 
 
+/* Car table associated to the Car class in the spring boot project*/
+/* the Car id is auto incremented and while inserting an object the id is not specified it's added by the database */
+/* The type are the same as the attribute types in the spring boot project*/
 CREATE TABLE Car (
   carid int NOT NULL AUTO_INCREMENT,
   entrydate varchar (50) NOT NULL,
@@ -74,8 +85,48 @@ CREATE TABLE Car (
   
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2019-10-24',20,2019,'verygood',1,false,'Ford','Fiesta','fullsize',45);
-INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2018-05-06',100,2017,'good',1,false,'Renault','Kadjar','standard',45);
-INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2019-10-24',50,2019,'very good',1,false,'BMW','X5','standardsuv',52);
+INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2018-05-06',100,2017,'good',1,true,'Renault','Kadjar','standard',45);
+INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2019-10-24',50,2019,'very good',1,true,'BMW','X5','standardsuv',52);
 INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2018-12-09',200,2016,'good',1,false,'Peugeot','3008','premiumsuv',58);
 INSERT INTO Car(entrydate,kmdriven,releaseyear,condi,pricekm,state,brand,model,style,priceday) VALUES ('2019-08-29',1000,2018,'good',1,false,'Citroen','C3','minivan',60);
+
+
+/* Bill table associated to the Bill class in the spring boot project*/
+/* the Bill id is auto incremented and while inserting an object the id is not specified it's added by the database */
+/* The type are the same as the attribute types in the spring boot project*/
+CREATE TABLE Bill (
+  billid int NOT NULL AUTO_INCREMENT,
+  carid int NOT NULL,
+  customerid int NOT NULL,
+  carbill int NOT NULL,
+  startdate varchar(50) NOT NULL,
+  enddate varchar(50) NOT NULL,
+  cardinfo varchar(50) NOT NULL,
+ 
+
+
+  
+  PRIMARY KEY (billid)
+  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO Bill(carid,customerid,carbill,startdate,enddate,cardinfo) VALUES (2,1,230,'2020-11-20','2020-11-25','cardinfo1');
+INSERT INTO Bill(carid,customerid,carbill,startdate,enddate,cardinfo) VALUES (3,2,410,'2020-11-19','2020-11-26','cardinfo2');
+
+/* Report table associated to the Report class in the spring boot project*/
+/* the Report id is auto incremented and while inserting an object the id is not specified it's added by the database */
+/* The type are the same as the attribute types in the spring boot project*/
+CREATE TABLE Report (
+  reportid int NOT NULL AUTO_INCREMENT,
+  reportdate varchar(50) NOT NULL,
+  revenue int NOT NULL,
+  durationreported varchar(50) NOT NULL,
+ 
+
+
+  
+  PRIMARY KEY (reportid)
+  
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+INSERT INTO Report(reportdate,revenue,durationreported) VALUES ('2020-11-20',1400,'2020-11-25');
+INSERT INTO Report(reportdate,revenue,durationreported) VALUES ('2020-11-19',560,'2020-11-26');
 

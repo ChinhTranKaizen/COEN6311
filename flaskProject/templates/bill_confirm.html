@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/confirm_order.css')}}">
+    <title>Bill_confirm</title>
+</head>
+<body>
+
+<a href="{{url_for('search')}}">Back to filter cars</a> <br><br>
+<h1>Hello {{loginuser}}.<a href="{{url_for('logout')}}">Log out</a></h1><br>
+    {% set carid = billinfo["carid"] %}
+    {% set customerid = billinfo["customerid"] %}
+    {% set carbill = billinfo["carbill"] %}
+    {% set startdate = billinfo["startdate"] %}
+    {% set enddate = billinfo["enddate"] %}
+    {% set cardinfo = billinfo["cardinfo"] %}
+<div class="item_container">
+
+    <h3>Bill Information:</h3><br>
+
+    <form id="add_bill" action="{{ url_for('add_bill') }}" method="post">
+        <label>Car ID: {{carid}} </label>
+            <input type="hidden" name="carid" value={{carid}}><br>
+        <label>Customer ID: {{customerid}} </label>
+            <input type="hidden" name="customerid" value={{customerid}}><br>
+        <label>Car Bill: {{carbill}} </label>
+            <input type="hidden" name="carbill" value={{carbill}}><br>
+        <label>Start Date: {{startdate}} </label>
+            <input type="hidden" name="startdate" value={{startdate}}><br>
+        <label>End Date: {{enddate}} </label>
+            <input type="hidden" name="enddate" value={{enddate}}><br>
+        <label>Card Info: {{cardinfo}} </label>
+            <input type="hidden" name="cardinfo" value={{cardinfo}}><br>
+            <button>Confirm</button>
+    </form>
+        <a href="{{url_for('search')}}"><button id="cancel_btn">Cancel</button></a>
+</div>
+</body>
+</html>
